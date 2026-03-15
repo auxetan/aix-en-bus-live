@@ -1,0 +1,17 @@
+{
+  "name": "Aix en Bus Live",
+  "short_name": "AixBus",
+  "description": "Tracker temps réel du réseau Aix en Bus — La Métropole Mobilité",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F47920",
+  "theme_color": "#F47920",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 48'><rect x='4' y='6' width='56' height='34' rx='10' fill='white'/><rect x='10' y='10' width='9' height='7' rx='2' fill='%23F47920' fill-opacity='.7'/><rect x='22' y='10' width='9' height='7' rx='2' fill='%23F47920' fill-opacity='.7'/><rect x='34' y='10' width='9' height='7' rx='2' fill='%23F47920' fill-opacity='.7'/><circle cx='16' cy='40' r='5' fill='%23E5E7EB'/><circle cx='48' cy='40' r='5' fill='%23E5E7EB'/></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
