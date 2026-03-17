@@ -210,6 +210,7 @@ html.dark .header-search-section-title{background:#14161E;color:#6B7280}
   .header-status-pill span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10px}
   #bus-focus-panel{left:0!important;right:0!important;bottom:0!important;width:100%!important;max-height:60vh!important;border-radius:20px 20px 0 0!important;box-shadow:0 -4px 24px rgba(0,0,0,.12)!important;overflow-y:auto!important;z-index:710!important}
   #bus-focus-panel #bus-focus-content{padding-bottom:20px}
+  #bus-focus-panel [data-action="close-stop"],#bus-focus-panel button[onclick*="deselectBus"]{width:38px!important;height:38px!important;min-width:38px!important;font-size:22px!important}
   #toast-container{bottom:80px}
   .header-search-result{padding:14px 16px!important;min-height:48px}
   #mobile-search-results .header-search-result{padding:14px 16px!important;min-height:52px}
@@ -362,6 +363,10 @@ html.dark #ob-cgu-step>div:last-child{background:#242736!important;border-top-co
 html.dark #ob-cgu-step .cgu-checkbox label{color:#D4D7E0}
 html.dark #ob-lines-step h2{color:#F3F4F6!important}
 html.dark #ob-lines-step p{color:#A0A4B8!important}
+html.dark #ob-prefs-step h2{color:#F3F4F6!important}
+html.dark #ob-prefs-step p{color:#A0A4B8!important}
+html.dark #ob-traces-off,html.dark #ob-theme-auto{background:#2A2D3C!important}
+html.dark #ob-traces-off div:first-child,html.dark #ob-theme-auto div:first-child{color:#A0A4B8!important}
 html.dark .ob-line{background:#2A2D3C;border-color:#363A4A;color:#E8EAF0}
 html.dark .ob-line:hover{box-shadow:0 4px 12px rgba(0,0,0,.25);border-color:rgba(244,121,32,.3)}
 html.dark .ob-line span{color:#D4D7E0!important}
@@ -533,6 +538,59 @@ html.dark .itin-fav-btn:hover{background:#363A4A;color:#F47920;border-color:#F47
       <p style="font-size:14px;color:#9CA3AF;margin-bottom:22px">Sélectionne celles que tu prends souvent.</p>
       <div id="onboarding-lines" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px"></div>
       <p style="font-size:12px;color:#C0C0C0;text-align:center;margin-bottom:18px">Passe cette étape pour voir toutes les lignes</p>
+      <button id="ob-lines-next" onclick="goToObPrefs()" style="width:100%;padding:16px;background:linear-gradient(135deg,#F47920,#E8691A);color:white;border:none;border-radius:16px;font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:0 6px 24px rgba(244,121,32,.35);transition:all .2s ease" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">Continuer</button>
+    </div>
+  </div>
+  <!-- Onboarding step 3: Préférences -->
+  <div id="ob-prefs-step" style="display:none;flex-direction:column;height:100%">
+    <div class="ob-header">
+      <div style="display:inline-block;margin-bottom:16px">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 4px 8px rgba(0,0,0,.2))"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+      <h1 style="color:white;font-size:26px;font-weight:900;margin-bottom:8px;text-shadow:0 2px 6px rgba(0,0,0,.15)">Préférences</h1>
+      <p style="color:rgba(255,255,255,.85);font-size:15px">Personnalise ton expérience</p>
+      <svg class="ob-wave" style="position:absolute;bottom:-1px;left:0;right:0;width:100%" viewBox="0 0 1200 80" preserveAspectRatio="none"><path d="M0,40 C300,80 900,0 1200,40 L1200,80 L0,80 Z" fill="white"/></svg>
+    </div>
+    <div class="ob-body" style="padding:28px 24px 32px;max-width:480px;margin:0 auto;width:100%;flex:1;overflow-y:auto">
+      <!-- Theme choice -->
+      <h2 style="font-size:18px;font-weight:800;color:#1F2937;margin-bottom:6px">Thème de la carte</h2>
+      <p style="font-size:14px;color:#9CA3AF;margin-bottom:16px">Choisis l'apparence qui te convient. Tu pourras changer plus tard.</p>
+      <div style="display:flex;gap:12px;margin-bottom:28px">
+        <button id="ob-theme-light" onclick="obSelectTheme('minimal')" style="flex:1;padding:16px;border-radius:16px;border:3px solid #F47920;background:white;cursor:pointer;text-align:center;transition:all .2s">
+          <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:12px;background:linear-gradient(135deg,#FFF7F0,#FAFBFC);display:flex;align-items:center;justify-content:center;border:2px solid #F0F0F0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="0"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-width="2" fill="none"/></svg>
+          </div>
+          <div style="font-size:14px;font-weight:800;color:#1F2937">Clair</div>
+          <div style="font-size:11px;color:#9CA3AF;font-weight:600">Par défaut</div>
+        </button>
+        <button id="ob-theme-dark" onclick="obSelectTheme('dark')" style="flex:1;padding:16px;border-radius:16px;border:3px solid transparent;background:#1C1F2A;cursor:pointer;text-align:center;transition:all .2s">
+          <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:12px;background:linear-gradient(135deg,#2A2D3C,#363A4A);display:flex;align-items:center;justify-content:center;border:2px solid #363A4A">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#F9A05C" stroke="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </div>
+          <div style="font-size:14px;font-weight:800;color:#E8EAF0">Sombre</div>
+          <div style="font-size:11px;color:#8B8FA3;font-weight:600">Moins lumineux</div>
+        </button>
+        <button id="ob-theme-auto" onclick="obSelectTheme('auto')" style="flex:1;padding:16px;border-radius:16px;border:3px solid transparent;background:#F8F9FA;cursor:pointer;text-align:center;transition:all .2s">
+          <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:12px;background:linear-gradient(135deg,white 50%,#1C1F2A 50%);display:flex;align-items:center;justify-content:center;border:2px solid #E5E7EB">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 0 20"/></svg>
+          </div>
+          <div style="font-size:14px;font-weight:800;color:#374151">Auto</div>
+          <div style="font-size:11px;color:#9CA3AF;font-weight:600">Suit le système</div>
+        </button>
+      </div>
+      <!-- Route traces toggle -->
+      <h2 style="font-size:18px;font-weight:800;color:#1F2937;margin-bottom:6px">Tracés des lignes</h2>
+      <p style="font-size:14px;color:#9CA3AF;margin-bottom:16px">Afficher les tracés routiers des bus sur la carte ?</p>
+      <div style="display:flex;gap:12px;margin-bottom:28px">
+        <button id="ob-traces-on" onclick="obSelectTraces(true)" style="flex:1;padding:14px;border-radius:14px;border:3px solid #F47920;background:linear-gradient(135deg,#FFF7F0,#FFF4EB);cursor:pointer;text-align:center;transition:all .2s">
+          <div style="font-size:14px;font-weight:800;color:#F47920">Oui, afficher</div>
+          <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-top:2px">Voir les parcours</div>
+        </button>
+        <button id="ob-traces-off" onclick="obSelectTraces(false)" style="flex:1;padding:14px;border-radius:14px;border:3px solid transparent;background:#F8F9FA;cursor:pointer;text-align:center;transition:all .2s">
+          <div style="font-size:14px;font-weight:800;color:#6B7280">Non merci</div>
+          <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-top:2px">Carte plus épurée</div>
+        </button>
+      </div>
       <button id="ob-confirm" onclick="confirmOnboarding()" style="width:100%;padding:16px;background:linear-gradient(135deg,#F47920,#E8691A);color:white;border:none;border-radius:16px;font-size:16px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;box-shadow:0 6px 24px rgba(244,121,32,.35);transition:all .2s ease" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">Voir les bus en direct</button>
     </div>
   </div>
@@ -966,7 +1024,7 @@ function showCustomPointPanel(point,isNew){
       </div>
       <div class="cp-coords" style="color:${tc};opacity:.75;font-size:11px">${point.lat.toFixed(5)}, ${point.lon.toFixed(5)}</div>
     </div>
-    <button data-action="close-stop" style="background:rgba(255,255,255,.2);border:none;cursor:pointer;width:28px;height:28px;border-radius:50%;color:${tc};display:flex;align-items:center;justify-content:center">${ICONS.close(tc,14)}</button>
+    <button data-action="close-stop" style="background:rgba(255,255,255,.2);border:none;cursor:pointer;width:34px;height:34px;border-radius:10px;color:${tc};display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)" aria-label="Fermer">${ICONS.close(tc,16)}</button>
   </div>
   <div style="padding:14px 18px">
     <div style="margin-bottom:12px">
@@ -1839,21 +1897,31 @@ function openStopPanel(stopId){
   const depsHTML=deps.length>0?deps.map(d=>`<div class="stop-popup-dep-row"><div style="background:${d.color};color:${isColorDark(d.color)?'white':'#1F2937'};padding:3px 9px;border-radius:8px;font-size:12px;font-weight:800;min-width:30px;text-align:center;flex-shrink:0">${d.ln}</div><span style="flex:1;font-size:12px;color:#6B7280;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.dir}</span><span style="font-size:13px;font-weight:800;white-space:nowrap;color:${d.min<=1?'#EF4444':d.min<=5?'#F47920':'#374151'}">${d.min===0?'Maintenant':d.min+' min'}</span></div>`).join(''):'<div style="padding:14px 16px;color:#9CA3AF;font-size:13px;text-align:center">Aucun passage dans 1h</div>';
   const stopPanel=document.getElementById('bus-focus-panel');
   stopPanel.style.display='block';
+  const _dBg=isDarkUI?'linear-gradient(135deg,#2E2518,#3D2A10)':'linear-gradient(135deg,#FFF7F0,#FFF4EB)';
+  const _dBorder=isDarkUI?'#3D3220':'#FDE8D5';
+  const _dText=isDarkUI?'#F3F4F6':'#1F2937';
+  const _dIconBg=isDarkUI?'#3D3220':'#F0E6D9';
+  const _dBtnBg=isDarkUI?'#2A2D3C':'white';
+  const _dBtnBorder=isDarkUI?'#363A4A':'#F0F0F0';
+  const _dBtnText=isDarkUI?'#A0A4B8':'#6B7280';
+  const _dDepHover=isDarkUI?'#2E3142':'#FFF7F0';
+  const _dDepBorder=isDarkUI?'#2E3142':'#F8F9FA';
+  const _dFootBorder=isDarkUI?'#363A4A':'#F3F4F6';
   stopPanel.innerHTML=`
-  <div style="background:linear-gradient(135deg,#FFF7F0 0%,#FFF4EB 100%);border-bottom:1px solid #FDE8D5;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:relative">
+  <div style="background:${_dBg};border-bottom:1px solid ${_dBorder};padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:relative">
     <div style="display:flex;align-items:center;gap:8px">
-      <div style="width:36px;height:36px;background:#F0E6D9;border-radius:10px;display:flex;align-items:center;justify-content:center">${ICONS.stopPin('#F47920',18)}</div>
-      <div><div style="font-weight:800;font-size:14px;color:#1F2937">${escapeHtml(stop.stop_name)}</div></div>
+      <div style="width:36px;height:36px;background:${_dIconBg};border-radius:10px;display:flex;align-items:center;justify-content:center">${ICONS.stopPin('#F47920',18)}</div>
+      <div><div style="font-weight:800;font-size:14px;color:${_dText}">${escapeHtml(stop.stop_name)}</div></div>
     </div>
-    <div style="display:flex;align-items:center;gap:4px">
-      <button onclick="toggleFavStop('${escapeHtml(stopId)}','${escapeHtml(stop.stop_name).replace(/'/g,"&#039;")}')" style="background:transparent;border:none;cursor:pointer;padding:4px;opacity:${isFav?'1':'.6'};transition:opacity .2s;display:flex;align-items:center;justify-content:center">${ICONS.star('#F59E0B',16,isFav)}</button>
-      <button data-action="close-stop" style="background:rgba(244,121,32,.1);border:none;cursor:pointer;width:28px;height:28px;border-radius:8px;color:#F47920;display:flex;align-items:center;justify-content:center;transition:background .15s">${ICONS.close('#F47920',14)}</button>
+    <div style="display:flex;align-items:center;gap:6px">
+      <button onclick="toggleFavStop('${escapeHtml(stopId)}','${escapeHtml(stop.stop_name).replace(/'/g,"&#039;")}')" style="background:transparent;border:none;cursor:pointer;padding:4px;opacity:${isFav?'1':'.6'};transition:opacity .2s;display:flex;align-items:center;justify-content:center" aria-label="${isFav?'Retirer des favoris':'Ajouter aux favoris'}">${ICONS.star('#F59E0B',16,isFav)}</button>
+      <button data-action="close-stop" style="background:rgba(244,121,32,.15);border:none;cursor:pointer;width:34px;height:34px;border-radius:10px;color:#F47920;display:flex;align-items:center;justify-content:center;transition:background .15s" aria-label="Fermer">${ICONS.close('#F47920',16)}</button>
     </div>
   </div>
   <div style="max-height:240px;overflow-y:auto">${depsHTML}</div>
-  <div style="padding:12px 14px;border-top:1px solid #F3F4F6;display:flex;gap:8px;font-size:12px">
-    <button onclick="openItineraryFrom('${stopId}')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #F0F0F0;background:white;cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;color:#6B7280;transition:all .15s">Depuis ici</button>
-    <button onclick="openItineraryTo('${stopId}')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #F0F0F0;background:white;cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;color:#6B7280;transition:all .15s">Vers ici</button>
+  <div style="padding:12px 14px;border-top:1px solid ${_dFootBorder};display:flex;gap:8px;font-size:12px">
+    <button onclick="openItineraryFrom('${stopId}')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid ${_dBtnBorder};background:${_dBtnBg};cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;color:${_dBtnText};transition:all .15s">Depuis ici</button>
+    <button onclick="openItineraryTo('${stopId}')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid ${_dBtnBorder};background:${_dBtnBg};cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;color:${_dBtnText};transition:all .15s">Vers ici</button>
   </div>`;
 }
 
@@ -1958,7 +2026,7 @@ function buildBusFocusHTML(bus){
       <div style="background:rgba(255,255,255,.2);width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:${tc}">${bus.lineNumber}</div>
       <div><div style="color:${tc};font-weight:800;font-size:16px">Ligne ${escapeHtml(bus.lineNumber)}</div><div style="color:${tc};opacity:.75;font-size:11px;font-weight:600">${escapeHtml(bus.direction)}</div></div>
     </div>
-    <button onclick="deselectBus()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.2);border:none;cursor:pointer;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:${tc};font-size:18px;font-weight:700;backdrop-filter:blur(4px)" title="Fermer">×</button>
+    <button onclick="deselectBus()" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.25);border:none;cursor:pointer;width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:${tc};font-size:20px;font-weight:700;backdrop-filter:blur(4px)" title="Fermer" aria-label="Fermer le panneau">×</button>
     <button data-action="close-bus" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;width:32px;height:32px;border-radius:10px;color:${tc};display:flex;align-items:center;justify-content:center;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.3)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">${ICONS.close(tc,16)}</button>
   </div>
   <div style="padding:18px 20px">
@@ -2532,12 +2600,14 @@ document.addEventListener('DOMContentLoaded',()=>{
 const FALLBACK_LINES=[{id:"l1",name:"1",long:"La Duranne",color:"#F47920"},{id:"l2",name:"2",long:"Jas de Bouffan",color:"#003DA5"},{id:"l3",name:"3",long:"Pont de l'Arc",color:"#16A34A"},{id:"l4",name:"4",long:"Les Milles",color:"#9333EA"},{id:"l5",name:"5",long:"Palette",color:"#F59E0B"},{id:"l6",name:"6",long:"Luynes",color:"#0EA5E9"},{id:"l8",name:"8",long:"Val St-André",color:"#EC4899"},{id:"lM1",name:"M1",long:"Krypton",color:"#EF4444"}];
 function showOnboarding(routes){
   const ob=document.getElementById('onboarding');ob.style.display='flex';
+  ob.style.opacity='1';ob.style.transform='';
   const cguAccepted=localStorage.getItem(CGU_ACCEPTED_KEY);
+  document.getElementById('ob-cgu-step').style.display='none';
+  document.getElementById('ob-lines-step').style.display='none';
+  document.getElementById('ob-prefs-step').style.display='none';
   if(!cguAccepted){
     document.getElementById('ob-cgu-step').style.display='flex';
-    document.getElementById('ob-lines-step').style.display='none';
   }else{
-    document.getElementById('ob-cgu-step').style.display='none';
     document.getElementById('ob-lines-step').style.display='flex';
   }
   const lines=routes&&routes.length?routes.slice(0,16).map(r=>({id:r.route_id,name:r.route_short_name||r.route_id,long:r.route_long_name||"",color:r.route_color?`#${r.route_color}`:"#F47920"})):FALLBACK_LINES;
@@ -2546,12 +2616,51 @@ function showOnboarding(routes){
 function toggleObLine(btn,rid,color){
   if(obSelectedLines.has(rid)){obSelectedLines.delete(rid);btn.style.borderColor='#F0F0F0';btn.style.background='white';btn.style.transform='';try{const b=document.getElementById(`ob-b-${CSS.escape(rid)}`);if(b){b.style.background='#F3F4F6';b.style.color='#C0C0C0';b.style.boxShadow='none'}}catch(e){}}
   else{obSelectedLines.add(rid);btn.style.borderColor=color;btn.style.background=color+'12';btn.style.transform='scale(1.06)';try{const b=document.getElementById(`ob-b-${CSS.escape(rid)}`);if(b){b.style.background=color;b.style.color=isColorDark(color)?'white':'#1F2937';b.style.boxShadow='0 2px 8px '+color+'40'}}catch(e){}}
-  document.getElementById('ob-confirm').textContent=obSelectedLines.size>0?`Voir mes ${obSelectedLines.size} ligne${obSelectedLines.size>1?'s':''}` :'Voir toutes les lignes';
+  document.getElementById('ob-lines-next').textContent=obSelectedLines.size>0?`Continuer (${obSelectedLines.size} ligne${obSelectedLines.size>1?'s':''})` :'Continuer';
+}
+let obThemeChoice='minimal';
+let obTracesChoice=true;
+function goToObPrefs(){
+  document.getElementById('ob-lines-step').style.display='none';
+  document.getElementById('ob-prefs-step').style.display='flex';
+  // Update button text with line count
+  const linesBtn=document.getElementById('ob-lines-next');
+  if(linesBtn)linesBtn.textContent=obSelectedLines.size>0?`${obSelectedLines.size} ligne${obSelectedLines.size>1?'s':''} sélectionnée${obSelectedLines.size>1?'s':''}`:'Continuer';
+}
+function obSelectTheme(t){
+  obThemeChoice=t;
+  const light=document.getElementById('ob-theme-light'),dark=document.getElementById('ob-theme-dark'),auto=document.getElementById('ob-theme-auto');
+  [light,dark,auto].forEach(b=>{b.style.borderColor='transparent'});
+  if(t==='minimal')light.style.borderColor='#F47920';
+  else if(t==='dark')dark.style.borderColor='#F47920';
+  else auto.style.borderColor='#F47920';
+}
+function obSelectTraces(on){
+  obTracesChoice=on;
+  const onBtn=document.getElementById('ob-traces-on'),offBtn=document.getElementById('ob-traces-off');
+  onBtn.style.borderColor=on?'#F47920':'transparent';
+  onBtn.style.background=on?'linear-gradient(135deg,#FFF7F0,#FFF4EB)':'#F8F9FA';
+  offBtn.style.borderColor=on?'transparent':'#F47920';
+  offBtn.style.background=on?'#F8F9FA':'linear-gradient(135deg,#FFF7F0,#FFF4EB)';
+  document.querySelector('#ob-traces-on div:first-child').style.color=on?'#F47920':'#6B7280';
+  document.querySelector('#ob-traces-off div:first-child').style.color=on?'#6B7280':'#F47920';
 }
 function confirmOnboarding(){
   safeSetJSON(OB_FAVS_KEY,[...obSelectedLines]);try{localStorage.setItem(OB_DONE_KEY,'1')}catch(_){}
   if(obSelectedLines.size>0){showAll=false;selectedRoutes=new Set(obSelectedLines)}
-  const ob=document.getElementById('onboarding');ob.style.transition='opacity .5s ease,transform .5s ease';ob.style.opacity='0';ob.style.transform='scale(1.03)';setTimeout(()=>{ob.style.display='none'},500);refreshUI();
+  // Apply theme choice
+  if(obThemeChoice==='auto'){
+    localStorage.removeItem('aix_map_style_manual');
+    const prefersDark=window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    if(prefersDark)setMapStyle('dark',false);else setMapStyle('minimal',false);
+  }else{
+    setMapStyle(obThemeChoice,true);
+  }
+  syncDarkWithMap();
+  // Apply route traces choice
+  showGhostShapes=obTracesChoice;
+  localStorage.setItem('aix_ghost_shapes',obTracesChoice?'1':'');
+  const ob=document.getElementById('onboarding');ob.style.transition='opacity .5s ease,transform .5s ease';ob.style.opacity='0';ob.style.transform='scale(1.03)';setTimeout(()=>{ob.style.display='none'},500);renderAllSidebars();refreshUI();
 }
 function resetOnboarding(){obSelectedLines=new Set(safeGetJSON(OB_FAVS_KEY,[]));showOnboarding(gtfs?gtfs.routes:null)}
 
@@ -3407,13 +3516,28 @@ function goDemo(){isDemo=true;setLoad(100,'Mode démonstration');setTimeout(()=>
 window.addEventListener('error',e=>{console.error('[AixBus] Uncaught error:',e.error||e.message)});
 window.addEventListener('unhandledrejection',e=>{console.error('[AixBus] Unhandled rejection:',e.reason);e.preventDefault()});
 
+// Clean old caches from previous SW versions
+if(window.caches){caches.keys().then(ks=>ks.filter(k=>k.startsWith('aix-bus-v')&&k!=='aix-bus-v3').forEach(k=>{caches.delete(k);console.log('[SW] Deleted old cache:',k)}))}
 // Register Service Worker for PWA
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').then(reg=>{
     console.log('[SW] Registered',reg.scope);
-    // Check for updates every 30min
-    setInterval(()=>reg.update(),30*60*1000);
+    // Check for updates every 15min
+    setInterval(()=>reg.update(),15*60*1000);
+    // When a new SW is waiting, prompt reload
+    reg.addEventListener('updatefound',()=>{
+      const nw=reg.installing;
+      if(nw)nw.addEventListener('statechange',()=>{
+        if(nw.state==='installed'&&navigator.serviceWorker.controller){
+          showToast('Mise à jour disponible — recharge la page','info',5000);
+        }
+      });
+    });
   }).catch(err=>console.warn('[SW] Registration failed',err));
+  // When new SW takes over, reload
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    console.log('[SW] New version active');
+  });
 }
 
 window.addEventListener("load",async()=>{
