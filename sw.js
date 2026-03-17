@@ -1,8 +1,13 @@
-// Service Worker — Aix en Bus Live PWA
-const CACHE_NAME = 'aix-bus-v1';
+// Service Worker — Aix en Bus Live PWA v2
+const CACHE_NAME = 'aix-bus-v2';
 const STATIC_ASSETS = [
   './',
   './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
+  './routes-cache.js',
   'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
@@ -29,14 +34,14 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch strategy: Network first for API/GTFS, Cache first for static
+// Fetch strategy
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
 
-  // GTFS data and CORS proxies: network first, cache as fallback
+  // API / dynamic data: network only, no caching
   if (url.href.includes('transport.data.gouv.fr') ||
       url.href.includes('corsproxy.io') ||
       url.href.includes('allorigins.win') ||
@@ -44,16 +49,20 @@ self.addEventListener('fetch', event => {
       url.href.includes('cors.sh') ||
       url.href.includes('nominatim.openstreetmap.org') ||
       url.href.includes('router.project-osrm.org') ||
+      url.href.includes('routing.openstreetmap.de') ||
       url.href.includes('formsubmit.co') ||
       url.href.includes('emailjs.com') ||
-      url.href.includes('cdn.jsdelivr.net/npm/@emailjs')) {
-    // Don't cache API requests — let the app handle its own IndexedDB caching
+      url.href.includes('cdn.jsdelivr.net/npm/@emailjs') ||
+      url.href.includes('googletagmanager.com') ||
+      url.href.includes('google-analytics.com')) {
     return;
   }
 
-  // Map tiles: cache first with network fallback (long-lived cache)
+  // Map tiles: cache first with network fallback
   if (url.href.includes('basemaps.cartocdn.com') ||
-      url.href.includes('tile.openstreetmap.org')) {
+      url.href.includes('tile.openstreetmap.org') ||
+      url.href.includes('stadiamaps.com') ||
+      url.href.includes('tiles.stadiamaps.com')) {
     event.respondWith(
       caches.match(event.request).then(cached => {
         if (cached) return cached;
@@ -79,9 +88,7 @@ self.addEventListener('fetch', event => {
         }
         return response;
       }).catch(() => {
-        // Offline fallback
         if (cached) return cached;
-        // If requesting the main page, return cached index
         if (event.request.mode === 'navigate') {
           return caches.match('./index.html');
         }
