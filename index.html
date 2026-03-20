@@ -10,6 +10,7 @@
 <meta name="description" content="Suis ton bus en temps réel à Aix-en-Provence. Horaires, itinéraires et positions des bus du réseau Aix en Bus.">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Cache-Control" content="public, max-age=3600">
 <!-- Open Graph for Facebook / social sharing -->
 <meta property="og:title" content="Aix en Bus Live — Suis ton bus en temps réel">
 <meta property="og:description" content="Carte interactive avec les positions des bus, horaires en direct, itinéraires et arrêts du réseau Aix en Bus à Aix-en-Provence.">
@@ -28,6 +29,10 @@
 <meta name="apple-mobile-web-app-title" content="AixBus">
 <link rel="manifest" href="./manifest.json">
 <title>Aix en Bus Live — Bus en temps réel à Aix-en-Provence</title>
+<link rel="dns-prefetch" href="https://proxy.cors.sh">
+<link rel="dns-prefetch" href="https://corsproxy.io">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -348,14 +353,15 @@ html.dark .header-search-section-title{background:#14161E;color:#6B7280}
 .ob-step-text strong{color:#1F2937}
 
 /* === ITINERARY === */
-#itinerary-panel{position:fixed;inset:0;z-index:3000;background:#F8F9FA;display:none;flex-direction:column;font-family:'Nunito',sans-serif}
-.itin-header{background:linear-gradient(135deg,#F47920 0%,#D4621A 100%);padding-top:calc(16px + constant(safe-area-inset-top));padding-top:calc(16px + env(safe-area-inset-top,0px));padding-left:20px;padding-right:20px;padding-bottom:16px;display:flex;align-items:center;gap:12px;flex-shrink:0;position:relative;overflow:hidden}
+#itinerary-panel{position:fixed;inset:0;z-index:3000;background:#F5F5F7;display:none;flex-direction:column;font-family:'Nunito',sans-serif}
+.itin-header{background:linear-gradient(135deg,#F47920 0%,#D4621A 100%);padding-top:calc(14px + constant(safe-area-inset-top));padding-top:calc(14px + env(safe-area-inset-top,0px));padding-left:18px;padding-right:18px;padding-bottom:14px;display:flex;align-items:center;gap:12px;flex-shrink:0;position:relative;overflow:hidden}
 .itin-header::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);pointer-events:none}
-.itin-form{padding:20px;background:white;border-bottom:1px solid #E5E7EB;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.itin-form{padding:16px 18px 18px;background:white;flex-shrink:0}
 .itin-input-wrap{position:relative;margin-bottom:12px}
 .itin-input-wrap .itin-dot{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:12px;height:12px;border-radius:50%}
-.itin-input{width:100%;padding:13px 14px 13px 42px;border-radius:14px;border:2px solid #F0F0F0;font-size:15px;font-family:'Nunito',sans-serif;outline:none;transition:all .2s ease;background:#FAFBFC}
-.itin-input:focus{border-color:#F47920;background:white;box-shadow:0 0 0 4px rgba(244,121,32,.08)}
+.itin-input{width:100%;padding:14px 14px;border-radius:12px;border:none;font-size:15px;font-family:'Nunito',sans-serif;outline:none;transition:all .2s ease;background:#F5F5F7;font-weight:600;color:#1F2937}
+.itin-input::placeholder{color:#B0B3BE;font-weight:600}
+.itin-input:focus{background:#EEEEF2;box-shadow:inset 0 0 0 2px rgba(244,121,32,.3)}
 #itin-minimap-wrap{transition:height .3s cubic-bezier(.4,0,.2,1)}
 #itin-minimap .leaflet-control-zoom{display:none!important}
 #itin-minimap .leaflet-control-attribution{display:none!important}
@@ -369,21 +375,47 @@ html.dark .itin-result-icon{background:#252838}
 .itin-result-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid #F8F9FA;font-size:14px;display:flex;align-items:center;gap:10px;transition:all .15s ease}
 .itin-result-item:hover{background:#FFF7F0;padding-left:20px}
 .itin-result-item:last-child{border:none}
-.itin-route-card{background:white;border-radius:18px;border:1px solid #E5E7EB;margin-bottom:14px;overflow:hidden;transition:all .2s ease;animation:floatIn .4s ease}
-.itin-route-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);transform:translateY(-1px)}
-.itin-route-card.recommended{border:2px solid #F47920;box-shadow:0 6px 24px rgba(244,121,32,.12)}
-.itin-field-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.itin-field-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,0,0,.08)}
+.itin-route-card{background:white;border-radius:16px;border:1px solid #EEEEF2;margin-bottom:12px;overflow:hidden;transition:all .2s ease;animation:floatIn .4s ease}
+.itin-route-card:active{transform:scale(.985)}
+.itin-route-card.recommended{border-color:#F47920;box-shadow:0 2px 16px rgba(244,121,32,.1)}
+.itin-card-head{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.itin-card-body{padding:4px 16px 12px}
+.itin-card-actions{padding:0 12px 12px;display:flex;gap:8px}
+.itin-card-actions button{flex:1;padding:10px;border-radius:12px;border:none;cursor:pointer;font-weight:700;font-size:12px;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.itin-card-actions .itin-action-primary{background:#F5F5F7;color:#374151}
+.itin-card-actions .itin-action-primary.rec{background:#F47920;color:white}
+.itin-card-actions .itin-action-secondary{background:transparent;color:#9CA3AF;flex:0;padding:10px 12px}
+.itin-leg-row{display:flex;align-items:center;gap:10px;padding:4px 0}
+.itin-leg-badge{width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;flex-shrink:0}
+.itin-leg-badge.small-text{font-size:9px}
+.itin-leg-info{flex:1;min-width:0}
+.itin-leg-title{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.itin-leg-sub{font-size:11px;color:#9CA3AF;font-weight:600}
+.itin-leg-time{font-size:11px;font-weight:800;color:#9CA3AF;flex-shrink:0}
+.itin-transfer{margin-left:13px;padding:4px 0 4px 16px;border-left:2px dashed #E5E7EB;font-size:11px;color:#9CA3AF;font-weight:600;display:flex;align-items:center;gap:6px}
+.itin-walk-leg{display:flex;align-items:center;gap:10px;padding:4px 0}
+.itin-walk-badge{width:28px;height:28px;border-radius:9px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.itin-tag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;display:inline-block}
+.itin-tag-top{background:linear-gradient(135deg,#F47920,#E8691A);color:white}
+.itin-tag-inactive{background:#FEF3C7;color:#92400E}
+.itin-live-badge{display:inline-flex;align-items:center;gap:3px;background:#DCFCE7;color:#16A34A;padding:1px 6px;border-radius:6px;font-size:10px;font-weight:800;margin-left:6px}
+.itin-live-dot{width:6px;height:6px;border-radius:50%;background:#16A34A;animation:pulse 1.5s infinite}
+.itin-field-row{display:flex;align-items:center;gap:10px;margin-bottom:0}
+.itin-field-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 2px rgba(0,0,0,.06)}
 .itin-field-input-wrap{flex:1;position:relative}
-.itin-swap-row{display:flex;align-items:center;gap:10px;margin:2px 0}
-.itin-vertical-line{width:1px;height:18px;background:#E5E7EB;margin-left:6px;flex-shrink:0}
-.itin-swap-btn{width:32px;height:32px;border-radius:10px;background:#F8F9FA;border:1.5px solid #E5E7EB;cursor:pointer;color:#6B7280;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.itin-swap-btn:hover{border-color:#F47920;color:#F47920}
-.itin-map-pick-btn{width:36px;height:36px;border-radius:10px;background:#F8F9FA;border:1.5px solid #E5E7EB;cursor:pointer;color:#9CA3AF;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
-.itin-map-pick-btn:hover,.itin-map-pick-btn.active{border-color:#F47920;background:#FFF7F0;color:#F47920}
+.itin-swap-row{display:flex;align-items:center;gap:10px;margin:0;padding:0 0 0 0}
+.itin-vertical-line{width:1.5px;height:16px;background:#E0E0E4;margin-left:4.5px;flex-shrink:0}
+.itin-swap-btn{width:30px;height:30px;border-radius:9px;background:#F5F5F7;border:none;cursor:pointer;color:#9CA3AF;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.itin-swap-btn:hover{background:#FFF7F0;color:#F47920}
+.itin-map-pick-btn{width:36px;height:36px;border-radius:10px;background:#F5F5F7;border:none;cursor:pointer;color:#B0B3BE;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.itin-map-pick-btn:hover,.itin-map-pick-btn.active{background:#FFF7F0;color:#F47920}
 .itin-back-btn{background:rgba(255,255,255,.15);border:none;cursor:pointer;width:38px;height:38px;border-radius:12px;color:white;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .itin-back-btn:hover{background:rgba(255,255,255,.25)}
-html.dark .itin-swap-btn,html.dark .itin-map-pick-btn{background:#2A2D3C;border-color:#363A4A;color:#8B8FA3}
+html.dark .itin-swap-btn,html.dark .itin-map-pick-btn{background:#2A2D3C;color:#6B7280}
+/* Results expandable */
+#itin-results{transition:flex .3s ease}
+.itin-expand-center-btn{width:auto;margin:6px auto 2px;padding:5px 16px;border-radius:20px;background:#F5F5F7;border:none;cursor:pointer;font-size:11px;font-weight:700;color:#6B7280;font-family:'Nunito',sans-serif;align-items:center;justify-content:center;gap:5px;transition:all .15s}
+.itin-expand-center-btn:active{background:#EEEEF2;transform:scale(.96)}
 .itin-map-tooltip{background:white!important;border:none!important;border-radius:10px!important;box-shadow:0 4px 16px rgba(0,0,0,.14)!important;font-family:'Nunito',sans-serif!important;font-size:12px!important;padding:5px 10px!important}
 .leaflet-tooltip-top.itin-map-tooltip::before{border-top-color:white!important}
 
@@ -473,15 +505,22 @@ html.dark #mobile-search-results .header-search-result:hover{background:#352A1A}
 html.dark ::-webkit-scrollbar-thumb{background:#4A4E62}
 html.dark ::-webkit-scrollbar-thumb:hover{background:#5C6078}
 /* Itinerary panel */
-html.dark #itinerary-panel{background:#1E2130}
-html.dark .itin-form{background:#242736;border-bottom-color:#363A4A;box-shadow:none}
-html.dark .itin-input{background:#2A2D3C;border-color:#363A4A;color:#E8EAF0}
-html.dark .itin-input:focus{background:#2E3142;border-color:#F47920}
+html.dark #itinerary-panel{background:#181A24}
+html.dark .itin-form{background:#1E2130}
+html.dark .itin-input{background:#282B3A;color:#E8EAF0}
+html.dark .itin-input::placeholder{color:#5C6078}
+html.dark .itin-input:focus{background:#2E3142;box-shadow:inset 0 0 0 2px rgba(244,121,32,.3)}
 html.dark .itin-results-dropdown{background:#242736;border-color:#363A4A}
 html.dark .itin-result-item{border-bottom-color:#2E3142;color:#D4D7E0}
 html.dark .itin-result-item:hover{background:#352A1A}
-html.dark .itin-route-card{background:#242736;border-color:#363A4A}
-html.dark .itin-route-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.25);border-color:rgba(244,121,32,.3)}
+html.dark .itin-route-card{background:#242736;border-color:#2E3142}
+html.dark .itin-card-head{border-color:#2E3142}
+html.dark .itin-card-actions .itin-action-primary{background:#2E3142;color:#E5E7EB}
+html.dark .itin-transfer{border-left-color:#3A3E50}
+html.dark .itin-leg-title{color:#E8EAF0}
+html.dark .itin-expand-center-btn{background:#2E3142;color:#9CA3AF}
+html.dark .itin-expand-center-btn:active{background:#363A4A}
+html.dark #itin-expanded-header{border-bottom-color:#2E3142;color:#E8EAF0}
 /* Onboarding */
 html.dark #onboarding{background:#1C1F2A}
 html.dark .ob-wave path{fill:#1C1F2A!important}
@@ -589,26 +628,28 @@ html.dark .fav-itin-delete-btn{background:rgba(239,68,68,.15)}
 .fav-itin-subtext{font-size:12px;color:#9CA3AF}
 
 /* === WHEN TO DEPART TOGGLE === */
-.itin-when-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #E5E7EB}
-html.dark .itin-when-row{border-bottom-color:#2E3142}
-.when-label{font-size:13px;font-weight:600;color:#6B7280;min-width:100px}
-.when-toggle{display:flex;gap:8px;flex:1}
-.when-option{flex:1;padding:8px;border:1.5px solid #E5E7EB;border-radius:10px;background:white;cursor:pointer;font-size:12px;font-weight:700;text-align:center;transition:all .2s;color:#6B7280}
-html.dark .when-option{background:#2A2D3C;border-color:#363A4A;color:#A0A4B8}
-html.dark .when-option:hover{background:#2E3142;border-color:#5C6078}
-.when-option.active{border-color:#F47920;background:#FFF7F0;color:#F47920}
-html.dark .when-option.active{background:#352A1A;border-color:#F47920;color:#F47920}
-.when-time-input{padding:8px;border:1.5px solid #E5E7EB;border-radius:10px;background:white;font-family:'Nunito',sans-serif;font-size:13px;outline:none;transition:all .2s;color:#1F2937}
-html.dark .when-time-input{background:#2A2D3C;border-color:#363A4A;color:#E8EAF0}
-.when-time-input:focus{border-color:#F47920;box-shadow:0 0 0 3px rgba(244,121,32,.08)}
+.itin-when-row{display:flex;align-items:center;gap:10px;padding:0 0 10px}
+html.dark .itin-when-row{}
+.when-label{font-size:12px;font-weight:700;color:#9CA3AF;min-width:auto;white-space:nowrap}
+.when-toggle{display:flex;gap:6px;flex:1}
+.when-option{flex:1;padding:8px 6px;border:none;border-radius:10px;background:#F5F5F7;cursor:pointer;font-size:12px;font-weight:700;text-align:center;transition:all .15s;color:#9CA3AF;font-family:'Nunito',sans-serif}
+html.dark .when-option{background:#282B3A;color:#6B7280}
+html.dark .when-option:hover{background:#2E3142;color:#A0A4B8}
+.when-option:hover{background:#EEEEF2;color:#6B7280}
+.when-option.active{background:#F47920;color:white}
+html.dark .when-option.active{background:#F47920;color:white}
+.when-time-input{padding:9px 10px;border:none;border-radius:10px;background:#F5F5F7;font-family:'Nunito',sans-serif;font-size:13px;font-weight:600;outline:none;transition:all .15s;color:#1F2937}
+html.dark .when-time-input{background:#282B3A;color:#E8EAF0}
+.when-time-input:focus{box-shadow:inset 0 0 0 2px rgba(244,121,32,.3)}
 
 /* === ITINERARY STOPS CARD === */
-.itin-stops-card{background:#FAFBFC;border-radius:16px;padding:14px;border:1.5px solid #F0F0F0;margin-bottom:14px}
-html.dark .itin-stops-card{background:#1E2130;border-color:#2E3142}
-.itin-when-section{margin-bottom:14px}
-.itin-compute-btn{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#F47920,#E8691A);color:white;border:none;cursor:pointer;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;box-shadow:0 4px 16px rgba(244,121,32,.25);transition:all .2s ease;display:flex;align-items:center;justify-content:center;gap:8px}
-.itin-compute-btn:hover{box-shadow:0 6px 24px rgba(244,121,32,.35);transform:translateY(-1px)}
-.itin-compute-btn:active{transform:translateY(0)}
+.itin-stops-card{padding:0;margin-bottom:16px}
+html.dark .itin-stops-card{}
+.itin-when-section{margin-bottom:16px;padding-top:14px;border-top:1px solid #EEEEF2}
+html.dark .itin-when-section{border-top-color:#2E3142}
+.itin-compute-btn{width:100%;padding:16px;border-radius:13px;background:#F47920;color:white;border:none;cursor:pointer;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.2px}
+.itin-compute-btn:hover{background:#E8691A;transform:translateY(-1px);box-shadow:0 6px 20px rgba(244,121,32,.3)}
+.itin-compute-btn:active{transform:translateY(0);box-shadow:none}
 
 /* === SAVE FAVORITE BUTTON === */
 .itin-fav-btn{padding:9px 14px;border:none;border-radius:10px;background:#F3F4F6;color:#374151;cursor:pointer;font-weight:700;font-size:12px;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:6px;transition:all .15s;flex:1}
@@ -782,14 +823,14 @@ html.dark .itin-fav-btn:hover{background:#363A4A;color:#F47920;border-color:#F47
 
 <!-- Itinerary Panel -->
 <!-- Itinerary Panel -->
-<div id="itinerary-panel">
+<div id="itinerary-panel" role="dialog" aria-label="Calcul d'itinéraire" aria-modal="true">
   <div class="itin-header">
-    <button onclick="closeItinerary()" class="itin-back-btn">
+    <button onclick="closeItinerary()" class="itin-back-btn" aria-label="Retour">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
     </button>
-    <div style="flex:1"><h2 style="color:white;font-size:18px;font-weight:900;margin:0;letter-spacing:-.3px">Itinéraire</h2><p style="color:rgba(255,255,255,.7);font-size:11px;margin:0;font-weight:600">Réseau Aix en Bus · Temps réel</p></div>
-    <button onclick="openItineraryFromMyLocation()" title="Depuis ma position" style="background:rgba(255,255,255,.15);border:none;cursor:pointer;width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;transition:background .15s;backdrop-filter:blur(4px)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+    <div style="flex:1"><h2 style="color:white;font-size:17px;font-weight:900;margin:0;letter-spacing:-.3px">Itinéraire</h2></div>
+    <button onclick="openItineraryFromMyLocation()" title="Depuis ma position" style="background:rgba(255,255,255,.12);border:none;cursor:pointer;width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;transition:background .15s" aria-label="Depuis ma position">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
     </button>
   </div>
   <div class="itin-form">
@@ -797,55 +838,62 @@ html.dark .itin-fav-btn:hover{background:#363A4A;color:#F47920;border-color:#F47
       <div class="itin-field-row">
         <div class="itin-field-dot" style="background:#22C55E"></div>
         <div class="itin-field-input-wrap">
-          <input id="itin-from" class="itin-input" placeholder="Adresse ou arrêt de départ..." autocomplete="off" aria-label="Départ"/>
+          <input id="itin-from" class="itin-input" placeholder="D'où pars-tu ?" autocomplete="off" aria-label="Départ"/>
           <div id="itin-from-results" class="itin-results-dropdown"></div>
         </div>
-        <button class="itin-map-pick-btn" onclick="startItinPick('from')" id="itin-from-pick-btn" title="Choisir sur la carte">
+        <button class="itin-map-pick-btn" onclick="startItinPick('from')" id="itin-from-pick-btn" title="Choisir sur la carte" aria-label="Choisir sur la carte">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </button>
       </div>
       <div class="itin-swap-row">
         <div class="itin-vertical-line"></div>
-        <button onclick="swapItinStops()" class="itin-swap-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/></svg>
+        <button onclick="swapItinStops()" class="itin-swap-btn" aria-label="Inverser départ et arrivée">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M7 16V4M7 4L3 8M7 4l4 4M17 8v12M17 20l4-4M17 20l-4-4"/></svg>
         </button>
       </div>
       <div class="itin-field-row">
         <div class="itin-field-dot" style="background:#EF4444"></div>
         <div class="itin-field-input-wrap">
-          <input id="itin-to" class="itin-input" placeholder="Adresse ou destination..." autocomplete="off" aria-label="Destination"/>
+          <input id="itin-to" class="itin-input" placeholder="Où vas-tu ?" autocomplete="off" aria-label="Destination"/>
           <div id="itin-to-results" class="itin-results-dropdown"></div>
         </div>
-        <button class="itin-map-pick-btn" onclick="startItinPick('to')" id="itin-to-pick-btn" title="Choisir sur la carte">
+        <button class="itin-map-pick-btn" onclick="startItinPick('to')" id="itin-to-pick-btn" title="Choisir sur la carte" aria-label="Choisir sur la carte">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </button>
       </div>
     </div>
     <div class="itin-when-section">
       <div class="itin-when-row">
-        <div class="when-label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px;margin-right:4px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Quand ?</div>
+        <div class="when-label"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px;margin-right:3px;opacity:.6"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Quand</div>
         <div class="when-toggle">
           <button class="when-option active" onclick="setItinWhenMode('now')" id="when-now-btn">Maintenant</button>
-          <button class="when-option" onclick="setItinWhenMode('depart')" id="when-depart-btn">Partir à...</button>
-          <button class="when-option" onclick="setItinWhenMode('arrive')" id="when-arrive-btn">Arriver à...</button>
+          <button class="when-option" onclick="setItinWhenMode('depart')" id="when-depart-btn">Partir à</button>
+          <button class="when-option" onclick="setItinWhenMode('arrive')" id="when-arrive-btn">Arriver à</button>
         </div>
       </div>
-      <div id="when-time-pick" style="display:none;align-items:center;gap:8px;padding:8px 0 4px">
-        <span id="when-time-label" style="font-size:12px;font-weight:700;color:#6B7280;min-width:52px">Partir à</span>
+      <div id="when-time-pick" style="display:none;align-items:center;gap:8px;padding:6px 0 2px">
         <input type="date" id="itin-date" class="when-time-input" style="flex:1"/>
         <input type="time" id="itin-arrive-time" class="when-time-input" value="14:30" style="flex:1"/>
       </div>
     </div>
-    <button onclick="computeItinerary()" class="itin-compute-btn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      Calculer l'itinéraire
-    </button>
+    <button onclick="computeItinerary()" class="itin-compute-btn">Rechercher</button>
   </div>
-  <div id="itin-minimap-wrap" style="flex-shrink:0;height:180px;position:relative;border-bottom:1px solid #E5E7EB;overflow:hidden;display:none">
+  <div id="itin-minimap-wrap" style="flex-shrink:0;height:170px;position:relative;overflow:hidden;display:none">
     <div id="itin-minimap" style="width:100%;height:100%"></div>
-    <div style="position:absolute;top:8px;right:8px;z-index:500;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-radius:8px;padding:4px 10px;font-size:10px;font-weight:800;color:#6B7280;box-shadow:0 2px 8px rgba(0,0,0,.08);font-family:'Nunito',sans-serif;pointer-events:none">Aperçu</div>
+    <div style="position:absolute;top:8px;right:8px;z-index:500;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:8px;padding:3px 9px;font-size:10px;font-weight:800;color:#9CA3AF;font-family:'Nunito',sans-serif;pointer-events:none">Aperçu</div>
   </div>
-  <div id="itin-results" style="flex:1;overflow-y:auto;padding:16px"></div>
+  <div id="itin-results-container" style="flex:1;display:flex;flex-direction:column;min-height:0;position:relative">
+    <div id="itin-expanded-header" style="display:none;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px));background:inherit;border-bottom:1px solid #EEEEF2;align-items:center;justify-content:space-between">
+      <button onclick="toggleItinExpand()" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;color:#6B7280;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;padding:4px 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>Retour</button>
+      <span style="font-size:14px;font-weight:800;color:inherit">Résultats</span>
+      <div style="width:60px"></div>
+    </div>
+    <button id="itin-expand-btn" onclick="toggleItinExpand()" class="itin-expand-center-btn" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      <span id="itin-expand-label">Agrandir</span>
+    </button>
+    <div id="itin-results" style="flex:1;overflow-y:auto;padding:6px 16px 16px;-webkit-overflow-scrolling:touch"></div>
+  </div>
 </div>
 
 <!-- Network status banner -->
@@ -1077,6 +1125,8 @@ const OB_DONE_KEY = "aix_ob_done_v2";
 const OB_FAVS_KEY = "aix_fav_routes";
 const CGU_ACCEPTED_KEY = "aix_cgu_accepted";
 const FAV_ITINS_KEY = "aix_fav_itins";
+const TRIP_HISTORY_KEY = "aix_trip_history";
+const MAX_TRIP_HISTORY = 20;
 const IDB_NAME = 'aix-bus-db'; // AXE 2
 const IDB_STORE = 'gtfs-cache';
 const IDB_KEY = 'gtfs_v5';
@@ -1425,13 +1475,13 @@ function showCustomPointPanel(point,isNew){
   if(itinFrom){itinFrom.addEventListener('click',()=>{
     const nr=findNearestOperationalStop(point.lat,point.lon);
     if(nr){itinFromStop=nr.stop;closeFocusPanel();removeTempPointMarker();openItinerary();document.getElementById('itin-from').value=point.name||nr.stop.stop_name;
-    if(nr.dist>50){itinFromWalk={stopName:nr.stop.stop_name,dist:Math.round(nr.dist),min:Math.max(1,Math.round(nr.dist/80)),userLat:point.lat,userLon:point.lon}}}
+    if(nr.dist>50){itinFromWalk={stopName:nr.stop.stop_name,dist:Math.round(nr.dist),min:Math.max(1,Math.round(nr.dist/75)),userLat:point.lat,userLon:point.lon}}}
   })}
   const itinTo=document.getElementById('cp-itin-to');
   if(itinTo){itinTo.addEventListener('click',()=>{
     const nr=findNearestOperationalStop(point.lat,point.lon);
     if(nr){itinToStop=nr.stop;closeFocusPanel();removeTempPointMarker();openItinerary();document.getElementById('itin-to').value=point.name||nr.stop.stop_name;
-    if(nr.dist>50){itinToWalk={stopName:nr.stop.stop_name,dist:Math.round(nr.dist),min:Math.max(1,Math.round(nr.dist/80)),userLat:point.lat,userLon:point.lon}}}
+    if(nr.dist>50){itinToWalk={stopName:nr.stop.stop_name,dist:Math.round(nr.dist),min:Math.max(1,Math.round(nr.dist/75)),userLat:point.lat,userLon:point.lon}}}
   })}
 }
 
@@ -1501,6 +1551,22 @@ async function saveToIDB(data){
     try{localStorage.setItem(CACHE_KEY,JSON.stringify({data,timestamp:Date.now()}))}catch(_){}
     return false;
   }
+}
+// Send lightweight schedule data to SW for offline mode
+function cacheSchedulesInSW(gtfsData){
+  if(!navigator.serviceWorker?.controller)return;
+  try{
+    // Only send essential schedule data (stop_times + stops + routes + trips + calendar)
+    const lightweight={
+      stops:gtfsData.stops||[],
+      routes:gtfsData.routes||[],
+      trips:(gtfsData.trips||[]).map(t=>({trip_id:t.trip_id,route_id:t.route_id,service_id:t.service_id,direction_id:t.direction_id,trip_headsign:t.trip_headsign})),
+      calendar:gtfsData.calendar||[],
+      calendarDates:gtfsData.calendarDates||[],
+      _cachedAt:Date.now()
+    };
+    navigator.serviceWorker.controller.postMessage({type:'CACHE_GTFS_SCHEDULES',data:lightweight});
+  }catch(e){console.warn('[Offline] Failed to cache schedules in SW:',e)}
 }
 async function loadFromIDB(){
   try{
@@ -1577,7 +1643,7 @@ async function loadGTFSFromNetwork(){
   for(const k in shapesMap)shapesMap[k].sort((a,b)=>a.seq-b.seq);
   const data={routes,trips,stops:stops.map(s=>({stop_id:s.stop_id,stop_name:s.stop_name,stop_lat:s.stop_lat,stop_lon:s.stop_lon})),calendar,calendarDates:calendarDates||[],stopTimesMap,shapesMap};
   setLoad(85,'Mise en cache (IndexedDB)...');
-  await saveToIDB(data);cacheDate=new Date();
+  await saveToIDB(data);cacheDate=new Date();cacheSchedulesInSW(data);
   setLoad(92,"Presque prêt...");return rebuildIndexes(data);
 }
 // v10: Static densify (no dependency on global haversine) for use during rebuildIndexes
@@ -1619,27 +1685,49 @@ function rebuildIndexes(d){
     if(nearby.length>0)stopAreaToPoints.set(stop.stop_id,nearby);
   }
   cachedActiveTrips=null;cachedActiveDate=null;
-  // v13: Build route-level stop sequence index for BFS itinerary search
-  // stopToRoutes: Map<stop_id, Set<route_id>> — which routes serve each stop
+  // v15: Build comprehensive routing indexes
   const stopToRoutes=new Map();
-  // routeStopSeqs: Map<route_id, Array<{trip_id, stops: [{stop_id, dep, arr}]}>> — representative trips per route
-  const routeStopSeqs=new Map();
-  const seenRouteDir=new Map(); // route_id|headsign → trip_id (keep one per direction)
+  const routeStopSeqs=new Map(); // representative patterns (1 per direction)
+  const routeTrips=new Map(); // ALL trip IDs per route
+  const seenRouteDir=new Map();
   for(const trip of d.trips){
     const sts=d.stopTimesMap[trip.trip_id];if(!sts||sts.length<2)continue;
+    // routeTrips: index ALL trips per route
+    if(!routeTrips.has(trip.route_id))routeTrips.set(trip.route_id,[]);
+    routeTrips.get(trip.route_id).push(trip.trip_id);
+    // routeStopSeqs: keep one representative per direction (for pattern reference)
     const rdk=trip.route_id+'|'+(trip.trip_headsign||'');
-    if(seenRouteDir.has(rdk))continue;seenRouteDir.set(rdk,trip.trip_id);
-    const seq=sts.map(s=>({stop_id:s.stop_id,dep:s.departure_time,arr:s.arrival_time}));
-    if(!routeStopSeqs.has(trip.route_id))routeStopSeqs.set(trip.route_id,[]);
-    routeStopSeqs.get(trip.route_id).push({trip_id:trip.trip_id,service_id:trip.service_id,headsign:trip.trip_headsign||'',stops:seq});
+    if(!seenRouteDir.has(rdk)){
+      seenRouteDir.set(rdk,trip.trip_id);
+      const seq=sts.map(s=>({stop_id:s.stop_id,dep:s.departure_time,arr:s.arrival_time}));
+      if(!routeStopSeqs.has(trip.route_id))routeStopSeqs.set(trip.route_id,[]);
+      routeStopSeqs.get(trip.route_id).push({trip_id:trip.trip_id,service_id:trip.service_id,headsign:trip.trip_headsign||'',stops:seq});
+    }
     for(const s of sts){
       if(!stopToRoutes.has(s.stop_id))stopToRoutes.set(s.stop_id,new Set());
       stopToRoutes.get(s.stop_id).add(trip.route_id);
     }
   }
-  // v12: tripDensePaths/tripCumDist/tripStopFractions will be populated LATER by fetchRoadPaths()
+  // v15: Build transfer graph — walkable nearby stops within 400m
+  const transferGraph=new Map();
+  const _opIds=[...(sti.keys()||[])];
+  for(let i=0;i<_opIds.length;i++){
+    const s1=sm[_opIds[i]];if(!s1)continue;
+    for(let j=i+1;j<_opIds.length;j++){
+      const s2=sm[_opIds[j]];if(!s2)continue;
+      const dist=haversine(+s1.stop_lat,+s1.stop_lon,+s2.stop_lat,+s2.stop_lon);
+      if(dist<=400){
+        const wm=Math.ceil(dist/75);
+        if(!transferGraph.has(_opIds[i]))transferGraph.set(_opIds[i],[]);
+        transferGraph.get(_opIds[i]).push({stopId:_opIds[j],dist,walkMin:wm});
+        if(!transferGraph.has(_opIds[j]))transferGraph.set(_opIds[j],[]);
+        transferGraph.get(_opIds[j]).push({stopId:_opIds[i],dist,walkMin:wm});
+      }
+    }
+  }
+  console.log(`[v15] routeTrips: ${routeTrips.size} routes, transferGraph: ${transferGraph.size} stops with walkable neighbors`);
   return{...d,routesMap:rm,tripsMap:tm,stopsMap:sm,stopToTrips:sti,operationalStopIds,stopAreaToPoints,
-    stopToRoutes,routeStopSeqs,
+    stopToRoutes,routeStopSeqs,routeTrips,transferGraph,
     tripDensePaths:new Map(),tripCumDist:new Map(),tripStopFractions:new Map()};
 }
 // ═══════════════════════════════════════════
@@ -2352,6 +2440,7 @@ function openStopPanel(stopId){
   <div style="padding:12px 14px;border-top:1px solid ${_dFootBorder};display:flex;gap:8px;font-size:12px">
     <button onclick="openItineraryFrom('${stopId}')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid ${_dBtnBorder};background:${_dBtnBg};cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;color:${_dBtnText};transition:all .15s">Depuis ici</button>
     <button onclick="openItineraryTo('${stopId}')" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid ${_dBtnBorder};background:${_dBtnBg};cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;color:${_dBtnText};transition:all .15s">Vers ici</button>
+    <button onclick="shareStop('${escapeHtml(stopId)}')" style="padding:10px 12px;border-radius:10px;border:1.5px solid ${_dBtnBorder};background:${_dBtnBg};cursor:pointer;font-weight:700;font-family:'Nunito',sans-serif;color:${_dBtnText};transition:all .15s;display:flex;align-items:center;justify-content:center" title="Partager"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
   </div>`;
 }
 
@@ -2876,8 +2965,12 @@ function updateSidebarStats(){
   const now=new Date();
   const onPath=buses.filter(b=>b.onDense).length;
   const pct=buses.length?Math.round(onPath/buses.length*100):0;
-  document.getElementById("header-status").textContent=`${buses.length} bus · ${pct}% GPS`;
-  document.getElementById("header-status").title=`${buses.length} bus actifs, ${onPath} sur tracé GPS, MàJ ${fmtTime(now).slice(0,5)}`;
+  const hs=document.getElementById("header-status");
+  // Show data freshness warning if cache is very old
+  const cacheAgeH=cacheDate?Math.round((Date.now()-cacheDate.getTime())/3600000):0;
+  const freshIcon=cacheAgeH>12?'⚠️ ':'';
+  hs.textContent=`${freshIcon}${buses.length} bus · ${pct}% GPS`;
+  hs.title=`${buses.length} bus actifs, ${onPath} sur tracé GPS\nDonnées: ${cacheDate?cacheAgeH<1?'< 1h':cacheAgeH+'h':'?'}\nMàJ ${fmtTime(now).slice(0,5)}`;
 }
 
 // ═══════════════════════════════════════════
@@ -2970,6 +3063,43 @@ function deleteFavItinerary(id){
   favItineraries=favItineraries.filter(f=>f.id!==id);
   safeSetJSON(FAV_ITINS_KEY,favItineraries);
   renderFavItinerariesSuggestions();
+}
+// ═══════════════════════════════════════════
+// TRIP HISTORY — track computed itineraries for smart suggestions
+// ═══════════════════════════════════════════
+function recordTrip(fromStop,toStop){
+  if(!fromStop||!toStop)return;
+  try{
+    const history=safeGetJSON(TRIP_HISTORY_KEY,[]);
+    const key=fromStop.stop_id+'→'+toStop.stop_id;
+    const existing=history.find(h=>h.key===key);
+    if(existing){existing.count++;existing.lastUsed=Date.now();existing.hour=new Date().getHours()}
+    else{history.push({key,fromId:fromStop.stop_id,toId:toStop.stop_id,fromName:fromStop.stop_name||'',toName:toStop.stop_name||'',count:1,lastUsed:Date.now(),hour:new Date().getHours()})}
+    // Keep max history and sort by frequency
+    const sorted=history.sort((a,b)=>b.count-a.count).slice(0,MAX_TRIP_HISTORY);
+    safeSetJSON(TRIP_HISTORY_KEY,sorted);
+  }catch(e){console.warn('[TripHistory]',e)}
+}
+function getFrequentTrips(limit){
+  const history=safeGetJSON(TRIP_HISTORY_KEY,[]);
+  return history.filter(h=>h.count>=2).sort((a,b)=>b.count-a.count).slice(0,limit||5);
+}
+function quickTrip(fromId,toId){
+  if(!gtfs)return;
+  const fs=gtfs.stopsMap?.[fromId],ts=gtfs.stopsMap?.[toId];
+  if(!fs||!ts)return;
+  itinFromStop=fs;itinToStop=ts;
+  document.getElementById('itin-from').value=fs.stop_name||fromId;
+  document.getElementById('itin-to').value=ts.stop_name||toId;
+  updateItinMinimap();
+  computeItinerary();
+}
+function getTimeSuggestedTrip(){
+  // Suggest a trip based on current hour matching past patterns
+  const hour=new Date().getHours();
+  const history=safeGetJSON(TRIP_HISTORY_KEY,[]);
+  // Find trips frequently taken at this hour (±1h)
+  return history.filter(h=>h.count>=2&&Math.abs(h.hour-hour)<=1).sort((a,b)=>b.count-a.count)[0]||null;
 }
 function useFavItinerary(fav){
   document.getElementById('itin-from').value=fav.fromName;
@@ -3442,7 +3572,7 @@ function findNearestOperationalStop(lat,lon,maxDist=1200){
   return nearest?{stop:nearest,dist:dNearest}:null;
 }
 // v12: Find multiple nearby operational stops
-function findNearbyOperationalStops(lat,lon,maxDist=1500,maxCount=8){
+function findNearbyOperationalStops(lat,lon,maxDist=2000,maxCount=12){
   if(!gtfs)return[];
   const results=[];
   for(const[stopId]of(gtfs.stopToTrips||new Map())){
@@ -3456,7 +3586,7 @@ function selectItinAddress(field,lat,lon,displayName){
   if(!gtfs)return;
   const result=findNearestOperationalStop(lat,lon,1500);
   if(!result){showToast('Aucun arrêt dans 1.5km','warning',3000);return}
-  const{stop,dist}=result,walkMin=Math.ceil(dist/80);
+  const{stop,dist}=result,walkMin=Math.ceil(dist/75);
   const walkInfo={distMeters:Math.round(dist),durationMin:walkMin,userLat:lat,userLon:lon};
   if(field==='from'){itinFromStop=stop;itinFromWalk=dist>50?walkInfo:null;document.getElementById('itin-from').value=displayName;setItinPickMarker('from',lat,lon)}
   else{itinToStop=stop;itinToWalk=dist>50?walkInfo:null;document.getElementById('itin-to').value=displayName;setItinPickMarker('to',lat,lon)}
@@ -3468,7 +3598,30 @@ function selectItinAddress(field,lat,lon,displayName){
 // ═══════════════════════════════════════════
 // ITINERARY (unchanged logic)
 // ═══════════════════════════════════════════
-function openItinerary(){document.getElementById('itinerary-panel').style.display='flex';cancelItinPick();if(itinFromStop||itinToStop)setTimeout(()=>updateItinMinimap(),200);else if(favItineraries.length>0){const el=document.getElementById('itin-results');const favHTML=renderFavItinerariesSuggestions();if(favHTML){el.innerHTML=`<div style="padding:8px 0">${favHTML}</div>`;bindFavItinCards()}}}
+function openItinerary(){document.getElementById('itinerary-panel').style.display='flex';cancelItinPick();if(itinFromStop||itinToStop)setTimeout(()=>updateItinMinimap(),200);else{const el=document.getElementById('itin-results');let suggestHTML='';
+  // Time-based suggestion
+  const timeSug=getTimeSuggestedTrip();
+  if(timeSug&&gtfs){
+    suggestHTML+=`<div style="margin:0 0 12px;padding:14px;background:${isDarkUI?'rgba(244,121,32,.08)':'#FFF7F0'};border:1.5px solid ${isDarkUI?'rgba(244,121,32,.2)':'#FDE8D5'};border-radius:14px;cursor:pointer" onclick="quickTrip('${timeSug.fromId}','${timeSug.toId}')">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F47920" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span style="font-size:13px;font-weight:800;color:#F47920">Comme d'habitude ?</span></div>
+      <div style="font-size:13px;font-weight:700;color:${isDarkUI?'#F3F4F6':'#374151'}">${escapeHtml(timeSug.fromName)} → ${escapeHtml(timeSug.toName)}</div>
+      <div style="font-size:11px;color:${isDarkUI?'#8B8FA3':'#9CA3AF'};margin-top:2px">Utilisé ${timeSug.count} fois · Appuie pour calculer</div>
+    </div>`;
+  }
+  // Favorite itineraries
+  if(favItineraries.length>0){const favHTML=renderFavItinerariesSuggestions();if(favHTML)suggestHTML+=favHTML}
+  // Frequent trips (if no time suggestion shown)
+  if(!timeSug){
+    const freq=getFrequentTrips(3);
+    if(freq.length){
+      suggestHTML+=`<div style="margin-top:8px"><div style="font-size:10px;font-weight:800;color:${isDarkUI?'#8B8FA3':'#9CA3AF'};text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Trajets fréquents</div>`;
+      freq.forEach(f=>{suggestHTML+=`<div style="padding:10px 12px;background:${isDarkUI?'#2A2D3C':'#F8F9FA'};border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .15s;border:1px solid ${isDarkUI?'#363A4A':'#E5E7EB'}" onclick="quickTrip('${f.fromId}','${f.toId}')"><div style="font-size:13px;font-weight:700;color:${isDarkUI?'#F3F4F6':'#374151'}">${escapeHtml(f.fromName)} → ${escapeHtml(f.toName)}</div><div style="font-size:11px;color:${isDarkUI?'#8B8FA3':'#9CA3AF'};margin-top:2px">${f.count} recherches</div></div>`});
+      suggestHTML+=`</div>`;
+    }
+  }
+  if(suggestHTML)el.innerHTML=`<div style="padding:4px 0">${suggestHTML}</div>`;
+  if(favItineraries.length>0)bindFavItinCards();
+}}
 function closeItinerary(){document.getElementById('itinerary-panel').style.display='none';cancelItinPick()}
 function searchItinStop(field,q){
   const el=document.getElementById(`itin-${field}-results`);
@@ -3595,14 +3748,24 @@ function checkUrlItinerary(){
 function computeItinerary(){
   if(!itinFromStop||!itinToStop){document.getElementById('itin-results').innerHTML=`<div style="text-align:center;padding:32px;color:#9CA3AF;font-size:13px"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" style="margin-bottom:8px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><div>Sélectionne un départ et une arrivée</div></div>`;return}
   if(!gtfs){document.getElementById('itin-results').innerHTML='<div style="text-align:center;padding:32px;color:#9CA3AF">Données non chargées</div>';return}
+  recordTrip(itinFromStop,itinToStop);
   document.getElementById('itin-results').innerHTML=`<div style="display:flex;align-items:center;justify-content:center;gap:12px;padding:32px;color:#9CA3AF"><div class="load-dots"><span></span><span></span><span></span></div><span style="font-size:13px;font-weight:600">Calcul en cours...</span></div>`;
   setTimeout(()=>{
     let now=new Date();
-    // Use selected date if available
+    // Use selected date if available (v16: also set hours for depart/arrive modes)
     const dateVal=document.getElementById('itin-date')?.value;
     if(dateVal&&itinWhenMode!=='now'){
       const [dy,dm,dd]=dateVal.split('-').map(Number);
-      now=new Date(dy,dm-1,dd,now.getHours(),now.getMinutes());
+      const tv=document.getElementById('itin-arrive-time')?.value;
+      if(tv&&itinWhenMode==='depart'){
+        const [th,tm]=tv.split(':').map(Number);
+        now=new Date(dy,dm-1,dd,th,tm);
+      } else if(tv&&itinWhenMode==='arrive'){
+        const [th,tm]=tv.split(':').map(Number);
+        now=new Date(dy,dm-1,dd,Math.max(0,th-1),tm); // v16: start search ~1h before target
+      } else {
+        now=new Date(dy,dm-1,dd,now.getHours(),now.getMinutes());
+      }
     }
     // "Quand partir ?" modes: now / depart at / arrive by
     let searchTime=now;
@@ -3614,7 +3777,7 @@ function computeItinerary(){
         const [th,tm]=tv.split(':').map(Number);
         arriveByTarget=th*3600+tm*60;
         const fakeTime=new Date(now);
-        fakeTime.setHours(Math.max(0,th-3),tm,0,0);
+        fakeTime.setHours(Math.max(0,th-1),tm,0,0); // v16: 1h before target for later departures
         searchTime=fakeTime;
       }
     } else if(itinWhenMode==='depart'){
@@ -3632,8 +3795,8 @@ function computeItinerary(){
     const fromLon=itinFromWalk?itinFromWalk.userLon:+itinFromStop.stop_lon;
     const toLat=itinToWalk?itinToWalk.userLat:+itinToStop.stop_lat;
     const toLon=itinToWalk?itinToWalk.userLon:+itinToStop.stop_lon;
-    const fromStops=findNearbyOperationalStops(fromLat,fromLon,2000,10);
-    const toStops=findNearbyOperationalStops(toLat,toLon,2000,10);
+    const fromStops=findNearbyOperationalStops(fromLat,fromLon,3000,15);
+    const toStops=findNearbyOperationalStops(toLat,toLon,3000,15);
     // v13: 2-pass approach — first active trips, then all trips as fallback
     function searchStopCombinations(opts={}){
       const routes=[];
@@ -3647,7 +3810,7 @@ function computeItinerary(){
           const found=findRoutes(fs.stop.stop_id,ts.stop.stop_id,searchTime,searchOpts);
           for(const r of found){
             const walkFromDist=fs.dist,walkToDist=ts.dist;
-            const walkFromMin=Math.ceil(walkFromDist/80),walkToMin=Math.ceil(walkToDist/80);
+            const walkFromMin=Math.ceil(walkFromDist/75),walkToMin=Math.ceil(walkToDist/75);
             r._walkFromDist=walkFromDist;r._walkToDist=walkToDist;
             r._walkFromMin=walkFromMin;r._walkToMin=walkToMin;
             r._totalWithWalk=r.totalTime+walkFromMin+walkToMin+(r._notActiveToday?0:r.waitTime);
@@ -3697,7 +3860,7 @@ function computeItinerary(){
     }
     // Always add walking-only option
     const directDist=haversine(fromLat,fromLon,toLat,toLon);
-    const walkOnlyMin=Math.ceil(directDist/80);
+    const walkOnlyMin=Math.ceil(directDist/75);
     const nowSec=departAfterTarget||timeToSec(fmtTime(now));
     if(directDist<6000){
       allRoutes.push({type:'walk',totalTime:walkOnlyMin,waitTime:0,departureAt:secsToHM(nowSec),arrivalAt:secsToHM(nowSec+walkOnlyMin*60),
@@ -3720,16 +3883,16 @@ function computeItinerary(){
           const fromReal=resolveOperationalStop(fs.stop.stop_id,tid);
           const fi=sts.findIndex(s=>s.stop_id===fromReal);if(fi===-1)continue;
           const dep=timeToSec(sts[fi].departure_time);
-          if(dep<nowSec-300||dep>nowSec+3600)continue; // departing within 1h
+          if(dep<nowSec-300||dep>nowSec+7200)continue; // departing within 2h
           const route=gtfs.routesMap[trip.route_id];if(!route)continue;
           // Check each subsequent stop: is walking from there faster than walking the whole way?
           for(let i=fi+1;i<Math.min(fi+20,sts.length);i++){
             const dropStop=gtfs.stopsMap[sts[i].stop_id];if(!dropStop)continue;
             const arr=timeToSec(sts[i].arrival_time);
             const walkRemaining=haversine(+dropStop.stop_lat,+dropStop.stop_lon,toLat,toLon);
-            const walkRemainingMin=Math.ceil(walkRemaining/80);
+            const walkRemainingMin=Math.ceil(walkRemaining/75);
             const busTime=Math.round((arr-dep)/60);
-            const totalHybrid=Math.round((dep-nowSec)/60)+busTime+walkRemainingMin+Math.ceil(fs.dist/80);
+            const totalHybrid=Math.round((dep-nowSec)/60)+busTime+walkRemainingMin+Math.ceil(fs.dist/75);
             // Only propose if: saves >5min vs walking, walk remaining < 2km, makes sense
             if(totalHybrid<walkOnlyMin-5&&walkRemaining<2000&&walkRemaining>100&&busTime>1){
               const hk=route.route_id+':'+sts[i].stop_id;
@@ -3740,7 +3903,7 @@ function computeItinerary(){
                 waitTime:Math.max(0,Math.round((dep-nowSec)/60)),
                 departureAt:secsToHM(dep),arrivalAt:secsToHM(arr+walkRemainingMin*60),
                 _notActiveToday:false,_nextServiceDay:null,
-                _walkFromDist:fs.dist,_walkFromMin:Math.ceil(fs.dist/80),
+                _walkFromDist:fs.dist,_walkFromMin:Math.ceil(fs.dist/75),
                 _walkToDist:walkRemaining,_walkToMin:walkRemainingMin,
                 _fromStop:fs.stop,_toStop:dropStop,
                 _totalWithWalk:totalHybrid,
@@ -3761,16 +3924,82 @@ function computeItinerary(){
         }
       }
     }
-    // Filter invalid, then sort: active today first, then by total time
-    allRoutes=allRoutes.filter(r=>r.legs&&r.legs.length>0&&r.totalTime>=0)
-      .sort((a,b)=>{
+    // v16: Run RAPTOR with mode-aware departure offsets
+    const _aSvc=getActiveServiceIds(now);
+    const raptorOpts={_activeSvc:_aSvc};
+    if(itinWhenMode==='arrive'&&arriveByTarget){
+      // Arrive-by mode: search backwards from target — try departures from 2.5h before to 30min before
+      const baseDepart=arriveByTarget-9000; // 2.5h before target arrival
+      const arrOffsets=[0,900,1800,2700,3600,4500,5400,6300,7200];
+      for(const offset of arrOffsets){
+        const depSec=Math.max(0,baseDepart+offset);
+        if(depSec>=arriveByTarget)continue; // don't depart after target arrival
+        try{
+          const rr=raptorSearch(fromLat,fromLon,toLat,toLon,depSec,now,{...raptorOpts,arriveBy:arriveByTarget});
+          for(const r of rr)allRoutes.push(r);
+        }catch(e){console.warn('[v16] RAPTOR arrive-by error:',e)}
+      }
+    } else {
+      // "Now" or "depart-at" mode
+      const baseDep=itinWhenMode==='depart'&&departAfterTarget?departAfterTarget:nowSec;
+      const depOffsets=itinWhenMode==='depart'?[0,900,1800,2700]:[0,900,1800,3600];
+      for(const offset of depOffsets){
+        const depSec=baseDep+offset;
+        try{
+          const rr=raptorSearch(fromLat,fromLon,toLat,toLon,depSec,now,raptorOpts);
+          for(const r of rr)allRoutes.push(r);
+        }catch(e){console.warn('[v16] RAPTOR error:',e)}
+      }
+    }
+    // Also run RAPTOR with allTrips if no active results
+    if(allRoutes.filter(r=>!r._notActiveToday).length<2){
+      const fallbackDep=itinWhenMode==='depart'&&departAfterTarget?departAfterTarget:
+                        itinWhenMode==='arrive'&&arriveByTarget?Math.max(0,arriveByTarget-7200):nowSec;
+      try{
+        const rr=raptorSearch(fromLat,fromLon,toLat,toLon,fallbackDep,now,{...raptorOpts,allTrips:true,
+          ...(arriveByTarget?{arriveBy:arriveByTarget}:{})});
+        for(const r of rr){r._notActiveToday=true;allRoutes.push(r)}
+      }catch(e){console.warn('[v16] RAPTOR allTrips error:',e)}
+    }
+    // Filter, dedupe, sort
+    allRoutes=allRoutes.filter(r=>r.legs&&r.legs.length>0&&r.totalTime>=0&&r.totalTime<=240);
+    // Dedupe by trip sequence + similar departure time
+    const seen=new Map();
+    allRoutes=allRoutes.filter(r=>{
+      const pattern=r.legs.map(l=>l.line+':'+l.dir).join('|');
+      const depSec=r.legs[0]?.dep||0;
+      const key=pattern+'@'+Math.round(depSec/120);
+      if(seen.has(key))return false;seen.set(key,true);return true;
+    });
+    if(arriveByTarget){
+      // Arrive-by: filter results arriving after target, sort by latest departure (smallest margin)
+      allRoutes=allRoutes.filter(r=>{
+        if(r._walkOnly)return true; // always keep walk option
+        if(r._arriveByMargin!=null)return true; // already filtered by RAPTOR
+        // For BFS results: compute arrival and check
+        const ll=r.legs[r.legs.length-1];
+        if(!ll)return false;
+        const totalArr=ll.arr+(r._walkToMin||0)*60;
+        if(totalArr>arriveByTarget)return false;
+        r._arriveByMargin=arriveByTarget-totalArr;
+        return true;
+      });
+      allRoutes.sort((a,b)=>{
         const aAct=a._notActiveToday?1:0,bAct=b._notActiveToday?1:0;
         if(aAct!==bAct)return aAct-bAct;
-        return a._totalWithWalk-b._totalWithWalk;
+        return(a._arriveByMargin||9999)-(b._arriveByMargin||9999);
       });
+    } else {
+      allRoutes.sort((a,b)=>{
+        const aAct=a._notActiveToday?1:0,bAct=b._notActiveToday?1:0;
+        if(aAct!==bAct)return aAct-bAct;
+        return(a._totalWithWalk||a.waitTime+a.totalTime)-(b._totalWithWalk||b.waitTime+b.totalTime);
+      });
+    }
+    allRoutes=allRoutes.slice(0,12);
     renderItinResults(allRoutes);
     if(allRoutes.length===0){
-      console.log(`[v13] No routes found even with allTrips. fromStops:${fromStops.length} toStops:${toStops.length}`);
+      console.log(`[v15] No routes found. fromStops:${fromStops.length} toStops:${toStops.length}`);
     }
   },50);
 }
@@ -3797,50 +4026,126 @@ function getNextServiceDay(serviceId){
   }
   return 'semaine';
 }
-// v13: BFS-based route finder using route-level graph
-// This finds routes with 0, 1, or 2 transfers by searching through the route network
+// v15: Connection-scan routing engine — searches ALL trips, walking transfers, wide time windows
 function findRoutes(fromStopId,toStopId,now,opts={}){
   if(!gtfs||!fromStopId||!toStopId)return[];
   const cur=timeToSec(fmtTime(now));
   const activeSvc=getActiveServiceIds(now);
   const res=[];
-  // Resolve stop IDs (handle parent/area stops)
-  const fromIds=new Set();const toIds=new Set();
-  fromIds.add(fromStopId);
-  const fromChildren=gtfs.stopAreaToPoints?.get(fromStopId);
-  if(fromChildren)fromChildren.forEach(c=>fromIds.add(c));
-  toIds.add(toStopId);
-  const toChildren=gtfs.stopAreaToPoints?.get(toStopId);
-  if(toChildren)toChildren.forEach(c=>toIds.add(c));
-  // Get all routes that serve from-stops and to-stops
+  const WALK_SPEED=75; // m/min realistic
+  const MIN_XFER=60; // 1min minimum transfer
+  const MAX_XFER=3600; // 60min max wait at transfer
+  const afterSec=opts.arriveBy?Math.max(0,opts.arriveBy-21600):cur-600;
+  const beforeSec=opts.arriveBy?opts.arriveBy:cur+21600;
+  // Expand stop IDs (handle parent/area stops)
+  function expandIds(sid){
+    const ids=new Set([sid]);
+    const ch=gtfs.stopAreaToPoints?.get(sid);
+    if(ch)ch.forEach(c=>ids.add(c));
+    return ids;
+  }
+  const fromIds=expandIds(fromStopId);
+  const toIds=expandIds(toStopId);
+  // Get routes serving from/to stops
   const fromRoutes=new Set(),toRoutes=new Set();
-  for(const sid of fromIds){const rts=gtfs.stopToRoutes?.get(sid);if(rts)rts.forEach(r=>fromRoutes.add(r))}
-  for(const sid of toIds){const rts=gtfs.stopToRoutes?.get(sid);if(rts)rts.forEach(r=>toRoutes.add(r))}
-  console.log(`[v13 BFS] from:${fromStopId}(${fromIds.size}ids,${fromRoutes.size}routes) to:${toStopId}(${toIds.size}ids,${toRoutes.size}routes)`);
-  // Helper: find trip segments on a route between two stop sets
-  function findSegments(routeId,startStopIds,endStopIds){
-    const seqs=gtfs.routeStopSeqs?.get(routeId);if(!seqs)return[];
-    const segments=[];
-    for(const seq of seqs){
-      const isActive=activeSvc.has(seq.service_id);
+  for(const sid of fromIds){gtfs.stopToRoutes?.get(sid)?.forEach(r=>fromRoutes.add(r))}
+  for(const sid of toIds){gtfs.stopToRoutes?.get(sid)?.forEach(r=>toRoutes.add(r))}
+  // Also include routes at walkable-nearby destination stops
+  const toNearbyMap=new Map();
+  for(const sid of toIds){
+    const nb=gtfs.transferGraph?.get(sid)||[];
+    for(const n of nb){if(!toIds.has(n.stopId)){toNearbyMap.set(n.stopId,n);gtfs.stopToRoutes?.get(n.stopId)?.forEach(r=>toRoutes.add(r))}}
+  }
+  console.log(`[v15] from:${fromStopId}(${fromIds.size}ids,${fromRoutes.size}rts) to:${toStopId}(${toIds.size}ids,${toRoutes.size}rts) nearbyDest:${toNearbyMap.size}`);
+  // === CORE: Find all trip segments for a route between stop sets ===
+  // Searches ALL trips via routeTrips index (not just 1 representative)
+  function findSegs(routeId,startIds,endIds,minDep,maxDep){
+    const tids=gtfs.routeTrips?.get(routeId);if(!tids)return[];
+    const segs=[];
+    for(const tid of tids){
+      const trip=gtfs.tripsMap[tid];if(!trip)continue;
+      const isActive=activeSvc.has(trip.service_id);
+      if(!opts.allTrips&&!isActive)continue;
+      const sts=gtfs.stopTimesMap[tid];if(!sts||sts.length<2)continue;
       let fi=-1;
-      for(let i=0;i<seq.stops.length;i++){if(startStopIds.has(seq.stops[i].stop_id)){fi=i;break}}
+      for(let i=0;i<sts.length;i++){if(startIds.has(sts[i].stop_id)){fi=i;break}}
       if(fi===-1)continue;
       let ti=-1;
-      for(let i=fi+1;i<seq.stops.length;i++){if(endStopIds.has(seq.stops[i].stop_id)){ti=i;break}}
+      for(let i=fi+1;i<sts.length;i++){if(endIds.has(sts[i].stop_id)){ti=i;break}}
       if(ti===-1)continue;
-      const dep=timeToSec(seq.stops[fi].dep),arr=timeToSec(seq.stops[ti].arr);
+      const dep=timeToSec(sts[fi].departure_time),arr=timeToSec(sts[ti].arrival_time);
+      if(dep<minDep||dep>maxDep||arr<=dep)continue;
       const route=gtfs.routesMap[routeId];if(!route)continue;
-      const nextDay=!isActive?getNextServiceDay(seq.service_id):null;
-      segments.push({routeId,tripId:seq.trip_id,serviceId:seq.service_id,isActive,
-        fromStopId:seq.stops[fi].stop_id,toStopId:seq.stops[ti].stop_id,
-        fi,ti,dep,arr,stops:ti-fi,headsign:seq.headsign,nextDay,
+      segs.push({routeId,tripId:tid,serviceId:trip.service_id,isActive,
+        fromStopId:sts[fi].stop_id,toStopId:sts[ti].stop_id,
+        dep,arr,stops:ti-fi,headsign:trip.trip_headsign||'',
+        nextDay:!isActive?getNextServiceDay(trip.service_id):null,
         line:route.route_short_name||route.route_id,
         color:route.route_color?`#${route.route_color}`:'#F47920'});
     }
-    return segments;
+    return segs.sort((a,b)=>opts.arriveBy?b.dep-a.dep:a.dep-b.dep);
   }
-  // Helper: build a leg object from a segment
+  // Pre-scan: for each from-route, find ALL reachable intermediate stops with arrival times
+  function scanLegs1(routeId){
+    const tids=gtfs.routeTrips?.get(routeId);if(!tids)return new Map();
+    const result=new Map(); // Map<toStopId, [{seg}]>
+    for(const tid of tids){
+      const trip=gtfs.tripsMap[tid];if(!trip)continue;
+      const isActive=activeSvc.has(trip.service_id);
+      if(!opts.allTrips&&!isActive)continue;
+      const sts=gtfs.stopTimesMap[tid];if(!sts||sts.length<2)continue;
+      let fi=-1;
+      for(let i=0;i<sts.length;i++){if(fromIds.has(sts[i].stop_id)){fi=i;break}}
+      if(fi===-1)continue;
+      const dep=timeToSec(sts[fi].departure_time);
+      if(dep<afterSec||dep>beforeSec)continue;
+      const route=gtfs.routesMap[routeId];if(!route)continue;
+      const line=route.route_short_name||routeId;
+      const color=route.route_color?`#${route.route_color}`:'#F47920';
+      for(let i=fi+1;i<sts.length;i++){
+        const arr=timeToSec(sts[i].arrival_time);
+        if(arr<=dep)continue;
+        const sid=sts[i].stop_id;
+        if(!result.has(sid))result.set(sid,[]);
+        result.get(sid).push({routeId,tripId:tid,serviceId:trip.service_id,isActive,
+          fromStopId:sts[fi].stop_id,toStopId:sid,dep,arr,stops:i-fi,
+          headsign:trip.trip_headsign||'',nextDay:!isActive?getNextServiceDay(trip.service_id):null,line,color});
+      }
+    }
+    for(const[,segs] of result)segs.sort((a,b)=>a.dep-b.dep);
+    return result;
+  }
+  // Pre-scan: for each to-route, find ALL stops that can reach destination with departure times
+  function scanLegs2(routeId){
+    const tids=gtfs.routeTrips?.get(routeId);if(!tids)return new Map();
+    const result=new Map(); // Map<fromStopId, [{seg}]>
+    const endIds=new Set(toIds);
+    for(const[sid] of toNearbyMap)endIds.add(sid);
+    for(const tid of tids){
+      const trip=gtfs.tripsMap[tid];if(!trip)continue;
+      const isActive=activeSvc.has(trip.service_id);
+      if(!opts.allTrips&&!isActive)continue;
+      const sts=gtfs.stopTimesMap[tid];if(!sts||sts.length<2)continue;
+      let ti=-1;
+      for(let i=sts.length-1;i>=0;i--){if(endIds.has(sts[i].stop_id)){ti=i;break}}
+      if(ti===-1)continue;
+      const arr=timeToSec(sts[ti].arrival_time);
+      const route=gtfs.routesMap[routeId];if(!route)continue;
+      const line=route.route_short_name||routeId;
+      const color=route.route_color?`#${route.route_color}`:'#F47920';
+      for(let i=0;i<ti;i++){
+        const dep=timeToSec(sts[i].departure_time);
+        if(dep>=arr)continue;
+        const sid=sts[i].stop_id;
+        if(!result.has(sid))result.set(sid,[]);
+        result.get(sid).push({routeId,tripId:tid,serviceId:trip.service_id,isActive,
+          fromStopId:sid,toStopId:sts[ti].stop_id,dep,arr,stops:ti-i,
+          headsign:trip.trip_headsign||'',nextDay:!isActive?getNextServiceDay(trip.service_id):null,line,color});
+      }
+    }
+    for(const[,segs] of result)segs.sort((a,b)=>a.dep-b.dep);
+    return result;
+  }
   function segToLeg(seg){
     const fS=gtfs.stopsMap[seg.fromStopId],tS=gtfs.stopsMap[seg.toStopId];
     return{line:seg.line,color:seg.color,dir:seg.headsign,fromStopId:seg.fromStopId,toStopId:seg.toStopId,
@@ -3848,171 +4153,417 @@ function findRoutes(fromStopId,toStopId,now,opts={}){
       fromLat:fS?.stop_lat,fromLon:fS?.stop_lon,toLat:tS?.stop_lat,toLon:tS?.stop_lon,
       dep:seg.dep,arr:seg.arr,stops:seg.stops,tripId:seg.tripId,shapeId:gtfs.tripsMap[seg.tripId]?.shape_id};
   }
-  // === PASS 1: Direct routes (routes serving both from and to) ===
-  const directRoutes=new Set();
-  for(const r of fromRoutes){if(toRoutes.has(r))directRoutes.add(r)}
-  for(const routeId of directRoutes){
-    const segs=findSegments(routeId,fromIds,toIds);
+  // === PASS 1: Direct routes ===
+  const directRouteIds=new Set();
+  for(const r of fromRoutes){if(toRoutes.has(r))directRouteIds.add(r)}
+  for(const routeId of directRouteIds){
+    const allToIds=new Set(toIds);
+    for(const[sid] of toNearbyMap)allToIds.add(sid);
+    const segs=findSegs(routeId,fromIds,allToIds,afterSec,beforeSec);
+    // Keep up to 4 departures per direction
+    const byDir=new Map();
     for(const seg of segs){
-      const arrBy=opts.arriveBy||0;
-      const inWindow=seg.isActive&&(arrBy?(seg.dep>=arrBy-14400&&seg.arr<=arrBy):(seg.dep>=cur-600&&seg.dep<=cur+14400));
-      if(!opts.allTrips&&!inWindow)continue;
-      res.push({type:'direct',totalTime:Math.round((seg.arr-seg.dep)/60),
-        waitTime:seg.isActive?Math.max(0,Math.round((seg.dep-cur)/60)):0,
-        departureAt:secsToHM(seg.dep),arrivalAt:secsToHM(seg.arr),
-        _notActiveToday:!seg.isActive,_nextServiceDay:seg.nextDay,
-        legs:[segToLeg(seg)]});
+      const dk=seg.headsign;
+      if(!byDir.has(dk))byDir.set(dk,[]);
+      byDir.get(dk).push(seg);
     }
-  }
-  if(res.length>=6&&!opts.allTrips)return res.sort((a,b)=>(a.waitTime+a.totalTime)-(b.waitTime+b.totalTime)).slice(0,8);
-  // === PASS 2: 1-transfer routes ===
-  const transferResults=[];
-  for(const fr of fromRoutes){
-    const frSeqs=gtfs.routeStopSeqs?.get(fr);if(!frSeqs)continue;
-    const reachableStops=new Set();
-    for(const seq of frSeqs){
-      let started=false;
-      for(const s of seq.stops){
-        if(!started&&fromIds.has(s.stop_id)){started=true;continue}
-        if(started)reachableStops.add(s.stop_id);
+    for(const[,dirSegs] of byDir){
+      for(const seg of dirSegs.slice(0,4)){
+        res.push({type:'direct',totalTime:Math.round((seg.arr-seg.dep)/60),
+          waitTime:seg.isActive?Math.max(0,Math.round((seg.dep-cur)/60)):0,
+          departureAt:secsToHM(seg.dep),arrivalAt:secsToHM(seg.arr),
+          _notActiveToday:!seg.isActive,_nextServiceDay:seg.nextDay,
+          legs:[segToLeg(seg)]});
       }
     }
-    for(const xSid of reachableStops){
-      const xRoutes=gtfs.stopToRoutes?.get(xSid);if(!xRoutes)continue;
-      for(const tr of xRoutes){
-        if(tr===fr)continue;if(!toRoutes.has(tr))continue;
-        const xSet=new Set([xSid]);
-        const leg1Segs=findSegments(fr,fromIds,xSet);
-        const leg2Segs=findSegments(tr,xSet,toIds);
-        if(!leg1Segs.length||!leg2Segs.length)continue;
-        for(const s1 of leg1Segs.slice(0,3)){
-          for(const s2 of leg2Segs.slice(0,3)){
-            // Ensure leg2 departs after leg1 arrives (same-day logic)
-            if(s2.dep<=s1.arr)continue;
-            const xferWait=s2.dep-s1.arr;
-            if(!opts.allTrips&&(xferWait<30||xferWait>2700))continue;
-            const bothActive=s1.isActive&&s2.isActive;
-            if(!opts.allTrips&&!bothActive)continue;
-            if(!opts.allTrips&&s1.dep<cur-600)continue;
-            const totalTime=Math.round((s2.arr-s1.dep)/60);
-            if(totalTime<=0||totalTime>180)continue; // sanity
-            const xS=gtfs.stopsMap[xSid];
-            transferResults.push({type:'transfer',totalTime,
-              waitTime:bothActive?Math.max(0,Math.round((s1.dep-cur)/60)):0,
-              departureAt:secsToHM(s1.dep),arrivalAt:secsToHM(s2.arr),
-              transferWait:Math.round(xferWait/60),transferStop:xS?.stop_name||xSid,
-              _notActiveToday:!bothActive,_nextServiceDay:s1.nextDay||s2.nextDay,
-              legs:[segToLeg(s1),segToLeg(s2)]});
+  }
+  // === PASS 2: 1-transfer routes (with walking transfers) ===
+  if(res.filter(r=>!r._notActiveToday).length<8){
+    // Pre-compute leg2 for each to-route
+    const leg2Cache=new Map();
+    for(const tr of toRoutes){
+      if(leg2Cache.size>=30)break;
+      leg2Cache.set(tr,scanLegs2(tr));
+    }
+    const xferSeen=new Set();
+    for(const fr of fromRoutes){
+      const leg1Map=scanLegs1(fr);
+      // For each intermediate stop reachable from origin
+      for(const[xSid,leg1Segs] of leg1Map){
+        // Build transfer stops: exact + walkable nearby
+        const xferStops=[{stopId:xSid,walkSec:0}];
+        const nearby=gtfs.transferGraph?.get(xSid)||[];
+        for(const n of nearby)xferStops.push({stopId:n.stopId,walkSec:n.walkMin*60});
+        for(const xfer of xferStops){
+          // Check each to-route for connections from this transfer stop
+          for(const[tr,leg2Map] of leg2Cache){
+            if(tr===fr)continue;
+            const leg2Segs=leg2Map.get(xfer.stopId);
+            if(!leg2Segs||!leg2Segs.length)continue;
+            const xk=fr+'>'+xSid+'>'+xfer.stopId+'>'+tr;
+            if(xferSeen.has(xk))continue;xferSeen.add(xk);
+            // Match best connections (up to 3 departures)
+            let matched=0;
+            for(const s1 of leg1Segs.slice(0,5)){
+              if(matched>=2)break;
+              const earliest=s1.arr+MIN_XFER+xfer.walkSec;
+              const s2=leg2Segs.find(s=>s.dep>=earliest&&s.dep<=s1.arr+MAX_XFER);
+              if(!s2)continue;
+              const bothActive=s1.isActive&&s2.isActive;
+              if(!opts.allTrips&&!bothActive)continue;
+              const totalTime=Math.round((s2.arr-s1.dep)/60);
+              if(totalTime<=0||totalTime>180)continue;
+              const xferName=xfer.walkSec>0?(gtfs.stopsMap[xSid]?.stop_name||xSid)+' → '+(gtfs.stopsMap[xfer.stopId]?.stop_name||xfer.stopId):(gtfs.stopsMap[xSid]?.stop_name||xSid);
+              res.push({type:'transfer',totalTime,
+                waitTime:bothActive?Math.max(0,Math.round((s1.dep-cur)/60)):0,
+                departureAt:secsToHM(s1.dep),arrivalAt:secsToHM(s2.arr),
+                transferWait:Math.round((s2.dep-s1.arr)/60),transferStop:xferName,
+                _notActiveToday:!bothActive,_nextServiceDay:s1.nextDay||s2.nextDay,
+                _walkTransfer:xfer.walkSec>0?Math.round(xfer.walkSec/60):0,
+                legs:[segToLeg(s1),segToLeg(s2)]});
+              matched++;
+            }
           }
         }
       }
+      if(res.length>=60)break;
     }
-    if(transferResults.length>=20)break;
   }
-  res.push(...transferResults);
-  if(res.length>=4&&!opts.allTrips)return dedupeAndSort(res);
-  // === PASS 3: 2-transfer routes ===
-  if(res.filter(r=>!r._notActiveToday).length<2||opts.allTrips){
+  // === PASS 3: 2-transfer routes (if few results) ===
+  if(res.filter(r=>!r._notActiveToday).length<3){
     const midRoutes=new Set();
     for(const fr of fromRoutes){
-      const frSeqs=gtfs.routeStopSeqs?.get(fr);if(!frSeqs)continue;
-      for(const seq of frSeqs){
+      const tids=gtfs.routeTrips?.get(fr);if(!tids)continue;
+      for(const tid of tids){
+        const trip=gtfs.tripsMap[tid];if(!trip)continue;
+        if(!opts.allTrips&&!activeSvc.has(trip.service_id))continue;
+        const sts=gtfs.stopTimesMap[tid];if(!sts)continue;
         let started=false;
-        for(const s of seq.stops){
+        for(const s of sts){
           if(!started&&fromIds.has(s.stop_id)){started=true;continue}
-          if(started){const rts=gtfs.stopToRoutes?.get(s.stop_id);if(rts)rts.forEach(r=>{if(r!==fr)midRoutes.add(r)})}
+          if(started){gtfs.stopToRoutes?.get(s.stop_id)?.forEach(r=>{if(r!==fr)midRoutes.add(r)})}
         }
+        break; // one trip per from-route is enough for pattern
       }
     }
     let count2=0;
     for(const mr of midRoutes){
-      if(count2>=6)break;
-      const mrSeqs=gtfs.routeStopSeqs?.get(mr);if(!mrSeqs)continue;
+      if(count2>=8)break;
+      const mrTids=gtfs.routeTrips?.get(mr);if(!mrTids)continue;
       const mrStops=new Set();
-      for(const seq of mrSeqs)for(const s of seq.stops)mrStops.add(s.stop_id);
+      for(const tid of mrTids){
+        const sts=gtfs.stopTimesMap[tid];if(!sts)continue;
+        for(const s of sts)mrStops.add(s.stop_id);
+        break;
+      }
       for(const sid of mrStops){
         const rts=gtfs.stopToRoutes?.get(sid);if(!rts)continue;
         for(const tr of rts){
           if(!toRoutes.has(tr)||tr===mr)continue;
           for(const fr of fromRoutes){
-            if(fr===mr)continue; // avoid same route as transfer
-            const frSeqs2=gtfs.routeStopSeqs?.get(fr);if(!frSeqs2)continue;
-            for(const seq of frSeqs2){
+            if(fr===mr)continue;
+            // Check if fr can reach any mrStop
+            const frTids=gtfs.routeTrips?.get(fr);if(!frTids)continue;
+            for(const tid of frTids){
+              const trip=gtfs.tripsMap[tid];if(!trip)continue;
+              if(!opts.allTrips&&!activeSvc.has(trip.service_id))continue;
+              const sts=gtfs.stopTimesMap[tid];if(!sts)continue;
               let started=false;
-              for(const s of seq.stops){
+              for(const s of sts){
                 if(!started&&fromIds.has(s.stop_id)){started=true;continue}
                 if(started&&mrStops.has(s.stop_id)){
                   const x1Set=new Set([s.stop_id]),x2Set=new Set([sid]);
-                  const l1=findSegments(fr,fromIds,x1Set);
-                  const l2=findSegments(mr,x1Set,x2Set);
-                  const l3=findSegments(tr,x2Set,toIds);
+                  const l1=findSegs(fr,fromIds,x1Set,afterSec,beforeSec);
+                  const l2=findSegs(mr,x1Set,x2Set,afterSec,beforeSec);
+                  const allToIds2=new Set(toIds);for(const[k] of toNearbyMap)allToIds2.add(k);
+                  const l3=findSegs(tr,x2Set,allToIds2,afterSec,beforeSec);
                   if(l1.length&&l2.length&&l3.length){
-                    const s1=l1[0],s2=l2[0],s3=l3[0];
-                    // Ensure chronological order
-                    if(s2.dep<=s1.arr||s3.dep<=s2.arr)continue;
+                    const s1=l1[0],s2=l2.find(x=>x.dep>=s1.arr+MIN_XFER);
+                    if(!s2)break;
+                    const s3=l3.find(x=>x.dep>=s2.arr+MIN_XFER);
+                    if(!s3)break;
                     const allActive=s1.isActive&&s2.isActive&&s3.isActive;
                     const totalTime=Math.round((s3.arr-s1.dep)/60);
-                    if(totalTime<=0||totalTime>180)continue;
-                    res.push({type:'2transfers',totalTime,
-                      waitTime:allActive?Math.max(0,Math.round((s1.dep-cur)/60)):0,
-                      departureAt:secsToHM(s1.dep),arrivalAt:secsToHM(s3.arr),
-                      transferWait:Math.round((s2.dep-s1.arr)/60),
-                      transferStop:(gtfs.stopsMap[s.stop_id]?.stop_name||'')+', '+(gtfs.stopsMap[sid]?.stop_name||''),
-                      _notActiveToday:!allActive,_nextServiceDay:s1.nextDay||s2.nextDay||s3.nextDay,
-                      legs:[segToLeg(s1),segToLeg(s2),segToLeg(s3)]});
-                    count2++;
+                    if(totalTime>0&&totalTime<=180){
+                      res.push({type:'2transfers',totalTime,
+                        waitTime:allActive?Math.max(0,Math.round((s1.dep-cur)/60)):0,
+                        departureAt:secsToHM(s1.dep),arrivalAt:secsToHM(s3.arr),
+                        transferWait:Math.round((s2.dep-s1.arr)/60),
+                        transferStop:(gtfs.stopsMap[s.stop_id]?.stop_name||'')+', '+(gtfs.stopsMap[sid]?.stop_name||''),
+                        _notActiveToday:!allActive,_nextServiceDay:s1.nextDay||s2.nextDay||s3.nextDay,
+                        legs:[segToLeg(s1),segToLeg(s2),segToLeg(s3)]});
+                      count2++;
+                    }
                   }
                   break;
                 }
               }
+              break;
             }
-            if(count2>=6)break;
+            if(count2>=8)break;
           }
-          if(count2>=6)break;
+          if(count2>=8)break;
         }
-        if(count2>=6)break;
+        if(count2>=8)break;
       }
     }
   }
-  return dedupeAndSort(res);
+  return dedupeAndSort(res,opts);
 }
-function dedupeAndSort(res){
-  const seen=new Set();
-  return res.filter(r=>{
-    if(!r.legs||r.legs.length===0||r.totalTime<0||r.totalTime>240)return false;
-    const k=r.legs.map(l=>l.line+':'+l.fromStopId+'-'+l.toStopId).join('|');
-    if(seen.has(k))return false;seen.add(k);return true;
-  }).sort((a,b)=>{
+// v16: Improved deduplication — time-aware, diverse results, arrive-by support
+function dedupeAndSort(res,opts={}){
+  const seen=new Map(); // pattern → [results]
+  const valid=res.filter(r=>r.legs&&r.legs.length>0&&r.totalTime>=0&&r.totalTime<=240);
+  const arriveBy=opts.arriveBy||null;
+  // For arrive-by: filter out routes arriving after target
+  const filtered=arriveBy?valid.filter(r=>{
+    const ll=r.legs[r.legs.length-1];if(!ll)return false;
+    return ll.arr<=arriveBy;
+  }):valid;
+  // Group by route pattern (line sequence + direction)
+  for(const r of filtered){
+    const pattern=r.legs.map(l=>l.line+':'+l.dir).join('|');
+    if(!seen.has(pattern))seen.set(pattern,[]);
+    seen.get(pattern).push(r);
+  }
+  // Keep up to 3 departures per pattern
+  const results=[];
+  for(const[,group] of seen){
+    if(arriveBy){
+      // Arrive-by: prefer LATEST departures that arrive before target
+      group.sort((a,b)=>{
+        if(a._notActiveToday!==b._notActiveToday)return a._notActiveToday?1:-1;
+        return b.legs[0].dep-a.legs[0].dep; // latest departure first
+      });
+    } else {
+      group.sort((a,b)=>{
+        if(a._notActiveToday!==b._notActiveToday)return a._notActiveToday?1:-1;
+        return(a.waitTime+a.totalTime)-(b.waitTime+b.totalTime);
+      });
+    }
+    // Dedupe by exact departure time (within 2min)
+    const kept=[];
+    for(const r of group){
+      const depSec=r.legs[0].dep;
+      if(kept.some(k=>Math.abs(k.legs[0].dep-depSec)<120))continue;
+      if(arriveBy){
+        const ll=r.legs[r.legs.length-1];
+        r._arriveByMargin=arriveBy-ll.arr;
+      }
+      kept.push(r);
+      if(kept.length>=3)break;
+    }
+    results.push(...kept);
+  }
+  if(arriveBy){
+    // Arrive-by: sort by smallest margin (latest possible departure)
+    return results.sort((a,b)=>{
+      if(a._notActiveToday!==b._notActiveToday)return a._notActiveToday?1:-1;
+      return(a._arriveByMargin||9999)-(b._arriveByMargin||9999);
+    }).slice(0,12);
+  }
+  return results.sort((a,b)=>{
     if(a._notActiveToday!==b._notActiveToday)return a._notActiveToday?1:-1;
     return(a.waitTime+a.totalTime)-(b.waitTime+b.totalTime);
-  }).slice(0,8);
+  }).slice(0,12);
+}
+// v15: RAPTOR — Round-bAsed Public Transit Optimized Router
+// Propagates earliest arrivals stop-by-stop, finding ALL reachable transfers
+// This catches routes the BFS approach misses (e.g. bus→walk→bus combos)
+function raptorSearch(fromLat,fromLon,toLat,toLon,departSec,now,opts={}){
+  if(!gtfs)return[];
+  const activeSvc=opts._activeSvc||getActiveServiceIds(now);
+  const WS=75,MIN_X=90,MAX_ROUNDS=4;
+  // Best arrival: Map<stopId, {arr, journey:[], round, walkFrom}>
+  const best=new Map();
+  const destMap=new Map();
+  // Find origin stops within 1.2km
+  for(const[sid] of(gtfs.stopToTrips||new Map())){
+    const s=gtfs.stopsMap[sid];if(!s)continue;
+    const d=haversine(fromLat,fromLon,+s.stop_lat,+s.stop_lon);
+    if(d<=1200){
+      const wa=departSec+Math.ceil(d/WS)*60;
+      const prev=best.get(sid);
+      if(!prev||wa<prev.arr)best.set(sid,{arr:wa,journey:[],round:0,walkFrom:d});
+    }
+  }
+  // Find destination stops within 1.2km
+  for(const[sid] of(gtfs.stopToTrips||new Map())){
+    const s=gtfs.stopsMap[sid];if(!s)continue;
+    const d=haversine(toLat,toLon,+s.stop_lat,+s.stop_lon);
+    if(d<=1200)destMap.set(sid,{dist:d,walkMin:Math.ceil(d/WS)});
+  }
+  if(!best.size||!destMap.size)return[];
+  // Walk transfers from initial stops
+  for(const[sid,entry] of[...best]){
+    const nb=gtfs.transferGraph?.get(sid)||[];
+    for(const n of nb){
+      const wa=entry.arr+n.walkMin*60;
+      const prev=best.get(n.stopId);
+      if(!prev||wa<prev.arr)best.set(n.stopId,{arr:wa,journey:[],round:0,walkFrom:entry.walkFrom+n.dist});
+    }
+  }
+  let marked=new Set(best.keys());
+  for(let round=1;round<=MAX_ROUNDS;round++){
+    if(!marked.size)break;
+    const nm=new Set();
+    // Routes through marked stops
+    const rmap=new Map();
+    for(const sid of marked){
+      gtfs.stopToRoutes?.get(sid)?.forEach(r=>{if(!rmap.has(r))rmap.set(r,new Set());rmap.get(r).add(sid)});
+      // Include child stops
+      const ch=gtfs.stopAreaToPoints?.get(sid);
+      if(ch)for(const c of ch){gtfs.stopToRoutes?.get(c)?.forEach(r=>{if(!rmap.has(r))rmap.set(r,new Set());rmap.get(r).add(c)})}
+    }
+    for(const[rid] of rmap){
+      const tids=gtfs.routeTrips?.get(rid);if(!tids)continue;
+      const route=gtfs.routesMap[rid];if(!route)continue;
+      const ln=route.route_short_name||rid;
+      const co=route.route_color?'#'+route.route_color:'#F47920';
+      for(const tid of tids){
+        const trip=gtfs.tripsMap[tid];if(!trip)continue;
+        if(!opts.allTrips&&!activeSvc.has(trip.service_id))continue;
+        const sts=gtfs.stopTimesMap[tid];if(!sts||sts.length<2)continue;
+        let on=false,bS=null,bD=0,bI=-1,bJ=null;
+        for(let i=0;i<sts.length;i++){
+          const sid=sts[i].stop_id;
+          const dep=timeToSec(sts[i].departure_time);
+          // Board or re-board?
+          const e=best.get(sid);
+          if(e){
+            const mw=e.journey.length>0?MIN_X:0;
+            if(dep>=e.arr+mw){
+              if(!on||dep<bD){on=true;bS=sid;bD=dep;bI=i;bJ=e.journey}
+            }
+          }
+          // Propagate
+          if(on&&i>bI){
+            const arr=timeToSec(sts[i].arrival_time);
+            if(arr<=bD)continue;
+            const prev=best.get(sid);
+            if(!prev||arr<prev.arr){
+              const fS=gtfs.stopsMap[bS],tS=gtfs.stopsMap[sid];
+              const leg={line:ln,color:co,dir:trip.trip_headsign||'',
+                fromStopId:bS,toStopId:sid,
+                fromStop:fS?.stop_name||bS,toStop:tS?.stop_name||sid,
+                fromLat:fS?.stop_lat,fromLon:fS?.stop_lon,toLat:tS?.stop_lat,toLon:tS?.stop_lon,
+                dep:bD,arr,stops:i-bI,tripId:tid,shapeId:trip.shape_id};
+              best.set(sid,{arr,journey:[...bJ,leg],round,walkFrom:0});
+              nm.add(sid);
+            }
+          }
+        }
+      }
+    }
+    // Walking transfers from newly reached stops
+    for(const sid of[...nm]){
+      const e=best.get(sid);if(!e)continue;
+      const nb=gtfs.transferGraph?.get(sid)||[];
+      for(const n of nb){
+        const wa=e.arr+n.walkMin*60;
+        const prev=best.get(n.stopId);
+        if(!prev||wa<prev.arr){
+          best.set(n.stopId,{arr:wa,journey:[...e.journey],round:e.round,walkFrom:0});
+          nm.add(n.stopId);
+        }
+      }
+    }
+    marked=nm;
+  }
+  // Build results
+  const results=[];
+  const arriveBy=opts.arriveBy||null;
+  for(const[sid,info] of destMap){
+    const e=best.get(sid);
+    if(!e||!e.journey.length)continue;
+    const fl=e.journey[0],ll=e.journey[e.journey.length-1];
+    const wfD=e.walkFrom||0,wfM=Math.ceil(wfD/WS),wtM=info.walkMin;
+    const totalArrSec=ll.arr+wtM*60;
+    // Arrive-by filter: skip results arriving after target
+    if(arriveBy&&totalArrSec>arriveBy)continue;
+    const type=e.journey.length===1?'direct':e.journey.length===2?'transfer':'2transfers';
+    const r={type,
+      totalTime:Math.round((ll.arr-fl.dep)/60),
+      waitTime:Math.max(0,Math.round((fl.dep-departSec)/60)),
+      departureAt:secsToHM(fl.dep),arrivalAt:secsToHM(totalArrSec),
+      _notActiveToday:false,_nextServiceDay:null,
+      _walkFromDist:wfD,_walkFromMin:wfM,_walkToDist:info.dist,_walkToMin:wtM,
+      _totalWithWalk:Math.round((ll.arr-departSec)/60)+wtM,
+      _fromStop:gtfs.stopsMap[fl.fromStopId],_toStop:gtfs.stopsMap[ll.toStopId],
+      legs:e.journey};
+    if(arriveBy)r._arriveByMargin=arriveBy-totalArrSec;
+    results.push(r);
+  }
+  if(arriveBy){
+    // Arrive-by: sort by latest departure (smallest margin = least waiting)
+    return results.sort((a,b)=>(a._arriveByMargin||9999)-(b._arriveByMargin||9999)).slice(0,8);
+  }
+  return results.sort((a,b)=>a._totalWithWalk-b._totalWithWalk).slice(0,8);
+}
+let _itinExpanded=false;
+function toggleItinExpand(){
+  _itinExpanded=!_itinExpanded;
+  const container=document.getElementById('itin-results-container');
+  const form=document.querySelector('.itin-form');
+  const minimap=document.getElementById('itin-minimap-wrap');
+  const header=document.querySelector('.itin-header');
+  const label=document.getElementById('itin-expand-label');
+  const expandedHeader=document.getElementById('itin-expanded-header');
+  const expandBtn=document.getElementById('itin-expand-btn');
+  if(_itinExpanded){
+    if(form)form.style.display='none';
+    if(minimap)minimap.style.display='none';
+    if(header)header.style.display='none';
+    if(expandBtn)expandBtn.style.display='none';
+    if(expandedHeader)expandedHeader.style.display='flex';
+    container.style.flex='1';
+  }else{
+    if(form)form.style.display='';
+    if(minimap&&lastItinRoutes.length)minimap.style.display='';
+    if(header)header.style.display='flex';
+    if(expandBtn)expandBtn.style.display='flex';
+    if(expandedHeader)expandedHeader.style.display='none';
+    if(label)label.textContent='Agrandir';
+  }
 }
 function renderItinResults(routes){
   const el=document.getElementById('itin-results');
+  // Show expand button when results exist
+  const expandBtn=document.getElementById('itin-expand-btn');
+  if(expandBtn)expandBtn.style.display=routes.length>0?'flex':'none';
+  // Reset expanded state
+  if(_itinExpanded){toggleItinExpand()}
   // v9: store routes for "Voir sur la carte" buttons and update mini-map
   lastItinRoutes=routes;
   if(routes.length>0)updateItinMinimap(routes[0]);else updateItinMinimap(null);
   if(!routes.length){el.innerHTML=`<div style="text-align:center;padding:40px 20px"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="1.5" style="margin-bottom:12px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg><div style="font-size:17px;font-weight:800;color:${isDarkUI?'#F3F4F6':'#374151'};margin-bottom:8px">Aucun itinéraire trouvé</div><div style="font-size:13px;color:#9CA3AF;line-height:1.6">Aucun trajet en bus trouvé entre ces deux points.<br>Les arrêts sont peut-être trop éloignés<br>ou non desservis par le réseau.<br><span style="color:#F47920;font-weight:700">Essaie des arrêts différents ou proches.</span></div></div>`;return}
   el.innerHTML=routes.map((r,idx)=>{
-    // Per-route walk info (skip for walk-only routes)
     const rWalkFrom=r._walkOnly?null:r._walkFromDist>50?{dist:Math.round(r._walkFromDist),min:r._walkFromMin,stopName:r._fromStop?.stop_name||r.legs[0]?.fromStop||'?'}:itinFromWalk?{dist:itinFromWalk.distMeters,min:itinFromWalk.durationMin,stopName:itinFromStop?.stop_name||'?'}:null;
     const rWalkTo=r._walkOnly?null:r._walkToDist>50?{dist:Math.round(r._walkToDist),min:r._walkToMin,stopName:r._toStop?.stop_name||r.legs[r.legs.length-1]?.toStop||'?'}:itinToWalk?{dist:itinToWalk.distMeters,min:itinToWalk.durationMin,stopName:itinToStop?.stop_name||'?'}:null;
     const walkFromMin=rWalkFrom?.min||0,walkToMin=rWalkTo?.min||0;
-    const isRec=idx===0&&!r._notActiveToday,depCol=r._notActiveToday?'#9CA3AF':r.waitTime<=2?'#EF4444':r.waitTime<=10?'#F59E0B':'#22C55E';
-    const bdr=isRec?'border:2px solid #F47920;box-shadow:0 4px 20px rgba(244,121,32,.12)':r._notActiveToday?'border:1px dashed '+(isDarkUI?'#4A4E5E':'#D1D5DB'):'border:1px solid '+(isDarkUI?'#363A4A':'#E5E7EB');
+    const isRec=idx===0&&!r._notActiveToday;
+    const depCol=r._notActiveToday?'#9CA3AF':r.waitTime<=2?'#EF4444':r.waitTime<=10?'#F59E0B':'#22C55E';
     const totalWithWalk=r.totalTime+walkFromMin+walkToMin;
-    const walkFromHTML=rWalkFrom?`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><div style="width:28px;height:28px;border-radius:8px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.5" fill="#3B82F6" stroke="none"/><path d="M12 7l-2 5h4l-1.5 7"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#3B82F6">À pied jusqu'à ${rWalkFrom.stopName}</div><div style="font-size:11px;color:#9CA3AF">${rWalkFrom.dist}m · ${rWalkFrom.min} min</div></div><div style="font-size:11px;font-weight:800;color:#3B82F6">${rWalkFrom.min} min</div></div>`:'';
-    const walkToHTML=rWalkTo?`<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><div style="width:28px;height:28px;border-radius:8px;background:#EFF6FF;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.5" fill="#3B82F6" stroke="none"/><path d="M12 7l-2 5h4l-1.5 7"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#3B82F6">À pied depuis ${rWalkTo.stopName}</div><div style="font-size:11px;color:#9CA3AF">${rWalkTo.dist}m · ${rWalkTo.min} min</div></div><div style="font-size:11px;font-weight:800;color:#3B82F6">${rWalkTo.min} min</div></div>`:'';
+    const cardClass='itin-route-card'+(isRec?' recommended':'')+(r._notActiveToday?' inactive':'');
+    const walkSvg='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.5" fill="#3B82F6" stroke="none"/><path d="M12 7l-2 5h4l-1.5 7"/></svg>';
+    const walkFromHTML=rWalkFrom?`<div class="itin-walk-leg" style="margin-bottom:4px"><div class="itin-walk-badge">${walkSvg}</div><div class="itin-leg-info"><div class="itin-leg-title" style="color:#3B82F6">À pied jusqu'à ${rWalkFrom.stopName}</div><div class="itin-leg-sub">${rWalkFrom.dist}m · ${rWalkFrom.min} min</div></div><div class="itin-leg-time" style="color:#3B82F6">${rWalkFrom.min} min</div></div>`:'';
+    const walkToHTML=rWalkTo?`<div class="itin-walk-leg" style="margin-top:4px"><div class="itin-walk-badge">${walkSvg}</div><div class="itin-leg-info"><div class="itin-leg-title" style="color:#3B82F6">À pied depuis ${rWalkTo.stopName}</div><div class="itin-leg-sub">${rWalkTo.dist}m · ${rWalkTo.min} min</div></div><div class="itin-leg-time" style="color:#3B82F6">${rWalkTo.min} min</div></div>`:'';
     const timeline=r.legs.map((leg,li)=>{
-      // v12: Real-time bus tracking indicator
       const liveBus=buses.find(b=>b.tripId===leg.tripId);
-      const liveHTML=liveBus?`<span style="display:inline-flex;align-items:center;gap:3px;background:#DCFCE7;color:#16A34A;padding:1px 6px;border-radius:6px;font-size:10px;font-weight:800;margin-left:6px"><span style="width:6px;height:6px;border-radius:50%;background:#16A34A;animation:pulse 1.5s infinite"></span>EN DIRECT</span>`:'';
+      const liveHTML=liveBus?`<span class="itin-live-badge"><span class="itin-live-dot"></span>EN DIRECT</span>`:'';
       const liveInfo=liveBus?`<div style="font-size:10px;color:#16A34A;font-weight:700;margin-top:2px">Bus en route · ${liveBus.prevStopName} → ${liveBus.nextStopName} (${liveBus.minutesToNextStop} min)</div>`:'';
       const isWalkLeg=leg.line==='walk';
       const legSubtitle=isWalkLeg?`${r._directDist||''}m · ${Math.round((leg.arr-leg.dep)/60)} min à pied`:`${secsToHM(leg.dep)} · ${leg.stops} arrêt${leg.stops>1?'s':''} · ${Math.round((leg.arr-leg.dep)/60)} min`;
-      return`<div style="display:flex;align-items:center;gap:8px;${li>0?'margin-top:4px':''}"><div style="width:28px;height:28px;border-radius:8px;background:${isWalkLeg?'#EFF6FF':leg.color};display:flex;align-items:center;justify-content:center;font-weight:900;font-size:${leg.line.length>2?'9':'12'}px;color:${isWalkLeg?'#3B82F6':isColorDark(leg.color)?'white':'#1F2937'};flex-shrink:0">${isWalkLeg?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.5" fill="#3B82F6" stroke="none"/><path d="M12 7l-2 5h4l-1.5 7"/></svg>':leg.line}</div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:700;color:${isDarkUI?'#F3F4F6':'#374151'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${isWalkLeg?'Trajet à pied':(leg.fromStop+' → '+leg.toStop)}${liveHTML}</div><div style="font-size:11px;color:#9CA3AF;font-weight:600">${legSubtitle}</div>${liveInfo}</div><div style="font-size:11px;font-weight:800;color:#6B7280;flex-shrink:0">${secsToHM(leg.arr)}</div></div>${li<r.legs.length-1?(()=>{const nextLeg=r.legs[li+1];const tw=Math.round((nextLeg.dep-leg.arr)/60);const xStop=leg.toStop||'';return`<div style="margin-left:12px;padding:5px 0 5px 16px;border-left:2px dashed ${isDarkUI?'#4A4E5E':'#E5E7EB'};font-size:11px;color:#9CA3AF;font-weight:600;display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C0C0C0" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>Correspondance${xStop?' à '+xStop:''} · ${tw} min</div>`})():''}`;
+      const badgeContent=isWalkLeg?walkSvg:leg.line;
+      const badgeBg=isWalkLeg?'#EFF6FF':leg.color;
+      const badgeColor=isWalkLeg?'#3B82F6':isColorDark(leg.color)?'white':'#1F2937';
+      const legTitle=isWalkLeg?'Trajet à pied':(leg.fromStop+' → '+leg.toStop);
+      const transfer=li<r.legs.length-1?(()=>{const nextLeg=r.legs[li+1];const tw=Math.round((nextLeg.dep-leg.arr)/60);const xStop=leg.toStop||'';return`<div class="itin-transfer"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C0C0C0" stroke-width="2"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>Correspondance${xStop?' à '+xStop:''} · ${tw} min</div>`})():'';
+      return`<div class="itin-leg-row"><div class="itin-leg-badge${leg.line.length>2?' small-text':''}" style="background:${badgeBg};color:${badgeColor}">${badgeContent}</div><div class="itin-leg-info"><div class="itin-leg-title">${legTitle}${liveHTML}</div><div class="itin-leg-sub">${legSubtitle}</div>${liveInfo}</div><div class="itin-leg-time">${secsToHM(leg.arr)}</div></div>${transfer}`;
     }).join('');
-    return`<div class="itin-route-card" style="${bdr};border-radius:18px;overflow:hidden;margin-bottom:14px;background:${isDarkUI?'#2A2D3C':'white'}"><div style="padding:12px 16px;background:${isRec?(isDarkUI?'rgba(244,121,32,.15)':'linear-gradient(135deg,#FFF7F0,#FFF4EB)'):(isDarkUI?'#2A2D3C':'#FAFBFC')};border-bottom:1px solid ${isRec?(isDarkUI?'rgba(244,121,32,.3)':'#FDE8D5'):(isDarkUI?'#363A4A':'#F3F4F6')};display:flex;align-items:center;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${isRec?`<span style="background:linear-gradient(135deg,#F47920,#E8691A);color:white;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800">TOP</span>`:''}${r._notActiveToday?`<span style="background:#FEF3C7;color:#92400E;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800">Pas aujourd'hui</span>`:''}<span style="font-size:20px;font-weight:900;color:${r._notActiveToday?'#9CA3AF':(isDarkUI?'#F3F4F6':'#1F2937')}">${totalWithWalk}<span style="font-size:12px;font-weight:600;color:#9CA3AF;margin-left:3px">min</span></span><span style="font-size:12px;color:#9CA3AF;font-weight:600">${r.type==='direct'?'Direct':r.type==='walk'?'À pied':r.type==='hybrid'?'Bus + marche':(r.legs.length-1)+' corresp.'}</span></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:${depCol}">${r._notActiveToday?(r._nextServiceDay?'Prochain: '+r._nextServiceDay:'Voir horaires'):(r.waitTime===0?'Maintenant':'Dans '+r.waitTime+' min')}</div><div style="font-size:10px;color:#9CA3AF;font-weight:600">${r.departureAt} → ${r.arrivalAt}</div></div></div><div style="padding:12px 16px">${walkFromHTML}${timeline}${walkToHTML}</div><div style="padding:0 12px 12px;display:flex;gap:8px"><button onclick="closeItinerary();showItineraryOnMap(lastItinRoutes[${idx}])" style="flex:1;padding:9px;border-radius:11px;border:none;background:${isRec?'linear-gradient(135deg,#F47920,#E8691A)':(isDarkUI?'#363A4A':'#F3F4F6')};color:${isRec?'white':(isDarkUI?'#E5E7EB':'#374151')};cursor:pointer;font-weight:800;font-size:12px;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s">${ICONS.map(isRec?'white':(isDarkUI?'#E5E7EB':'#374151'),14)} Voir sur la carte</button><button class="itin-fav-btn" onclick="shareItinerary(${idx})" style="display:flex;align-items:center;justify-content:center;gap:4px" title="Partager cet itinéraire"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Partager</button><button class="itin-fav-btn" onclick="saveFavItinerary()" style="display:flex;align-items:center;justify-content:center;gap:4px" title="Sauvegarder cet itinéraire">${ICONS.star('#F59E0B',12,true)} Sauvegarder</button></div></div>`;
+    const typeLabel=r.type==='direct'?'Direct':r.type==='walk'?'À pied':r.type==='hybrid'?'Bus + marche':(r.legs.length-1)+' corresp.';
+    const waitLabel=r._notActiveToday?(r._nextServiceDay?'Prochain: '+r._nextServiceDay:'Voir horaires'):(r.waitTime===0?'Maintenant':'Dans '+r.waitTime+' min');
+    return`<div class="${cardClass}"><div class="itin-card-head"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${isRec?'<span class="itin-tag itin-tag-top">TOP</span>':''}${r._notActiveToday?'<span class="itin-tag itin-tag-inactive">Pas aujourd\'hui</span>':''}<span style="font-size:20px;font-weight:900;color:${r._notActiveToday?'#9CA3AF':(isDarkUI?'#F3F4F6':'#1F2937')}">${totalWithWalk}<span style="font-size:12px;font-weight:600;color:#9CA3AF;margin-left:3px">min</span></span><span style="font-size:12px;color:#9CA3AF;font-weight:600">${typeLabel}</span></div><div style="text-align:right"><div style="font-size:12px;font-weight:800;color:${depCol}">${waitLabel}</div><div style="font-size:10px;color:#9CA3AF;font-weight:600">${r.departureAt} → ${r.arrivalAt}</div></div></div><div class="itin-card-body">${walkFromHTML}${timeline}${walkToHTML}</div><div class="itin-card-actions"><button class="itin-action-primary${isRec?' rec':''}" onclick="closeItinerary();showItineraryOnMap(lastItinRoutes[${idx}])">${ICONS.map(isRec?'white':(isDarkUI?'#E5E7EB':'#374151'),14)} Voir sur la carte</button><button class="itin-action-secondary" onclick="shareItinerary(${idx})" title="Partager"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button></div></div>`;
   }).join('');
 }
 
@@ -4243,7 +4794,33 @@ function updateNetStatus(){
     }
   }
 }
-window.addEventListener('online',updateNetStatus);
+// Background Sync: register sync when going online to refresh GTFS
+async function registerBgSync(){
+  if(!('serviceWorker' in navigator))return;
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    // One-time sync
+    if(reg.sync)await reg.sync.register('gtfs-refresh').catch(()=>{});
+    // Periodic sync (if available) — every 6 hours
+    if(reg.periodicSync){
+      const status=await navigator.permissions.query({name:'periodic-background-sync'}).catch(()=>({state:'denied'}));
+      if(status.state==='granted'){
+        await reg.periodicSync.register('gtfs-periodic-refresh',{minInterval:6*3600*1000}).catch(()=>{});
+        console.log('[BgSync] Periodic sync registered (6h)');
+      }
+    }
+  }catch(e){console.warn('[BgSync] Registration failed:',e)}
+}
+// Listen for SW messages
+if(navigator.serviceWorker){
+  navigator.serviceWorker.addEventListener('message',e=>{
+    if(e.data?.type==='GTFS_REFRESH_NEEDED'&&navigator.onLine){
+      console.log('[BgSync] Received refresh request from SW');
+      loadGTFSFromNetwork().then(async freshGtfs=>{gtfs=freshGtfs;await fetchRoadPaths(gtfs);tick();renderAllSidebars();showToast('Données mises à jour','success',2000)}).catch(()=>{});
+    }
+  });
+}
+window.addEventListener('online',()=>{updateNetStatus();registerBgSync()});
 window.addEventListener('offline',updateNetStatus);
 
 // ═══════════════════════════════════════════
@@ -4272,7 +4849,7 @@ async function launchApp(demo=false){
     initMap();tick();renderAllSidebars();bindHeaderSearch();bindItineraryInputs();renderCustomPoints();
     if(localStorage.getItem('aix_sidebar_collapsed')==='1')toggleSidebar();
     requestAnimationFrame(animationLoop);
-    setInterval(tick,REFRESH);
+    _tickInterval=setInterval(tick,REFRESH);
     initNotifChecker();
     if(!localStorage.getItem(OB_DONE_KEY)){showOnboarding(gtfs?gtfs.routes:null)}
     else{const fv=safeGetJSON(OB_FAVS_KEY,[]);if(fv.length){showAll=false;selectedRoutes=new Set(fv);refreshUI()}}
@@ -4291,6 +4868,22 @@ async function retryBoot(){
   try{gtfs=await loadGTFSFromNetwork();await fetchRoadPaths(gtfs);setLoad(100,'Carte prête !');await new Promise(r=>setTimeout(r,500));launchApp(false)}catch(e){goDemo()}
 }
 function goDemo(){isDemo=true;setLoad(100,'Mode démonstration');setTimeout(()=>launchApp(true),400)}
+
+// Page visibility: pause tick when hidden, resume when visible
+let _tickInterval=null;
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    // Pause refresh when tab is hidden to save battery
+    if(_tickInterval){clearInterval(_tickInterval);_tickInterval=null;console.log('[Perf] Tick paused (tab hidden)')}
+  }else{
+    // Resume and immediately tick
+    if(!_tickInterval&&typeof tick==='function'){
+      tick();renderAllSidebars();
+      _tickInterval=setInterval(tick,REFRESH);
+      console.log('[Perf] Tick resumed (tab visible)');
+    }
+  }
+});
 
 // Global keyboard shortcuts
 document.addEventListener('keydown',e=>{
@@ -4312,12 +4905,10 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-// Global error handler — prevent crashes from breaking the app
-window.addEventListener('error',e=>{console.error('[AixBus] Uncaught error:',e.error||e.message)});
-window.addEventListener('unhandledrejection',e=>{console.error('[AixBus] Unhandled rejection:',e.reason);e.preventDefault()});
+// Error logging handled by lightweight error monitoring system above
 
 // Clean old caches from previous SW versions
-if(window.caches){caches.keys().then(ks=>ks.filter(k=>k.startsWith('aix-bus-v')&&k!=='aix-bus-v4'&&k!=='aix-tiles-v1').forEach(k=>{caches.delete(k);console.log('[SW] Deleted old cache:',k)}))}
+if(window.caches){caches.keys().then(ks=>ks.filter(k=>k.startsWith('aix-bus-v')&&k!=='aix-bus-v5'&&k!=='aix-tiles-v1').forEach(k=>{caches.delete(k);console.log('[SW] Deleted old cache:',k)}))}
 // Register Service Worker for PWA
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('./sw.js').then(reg=>{
